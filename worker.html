@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ReferPro Worker Panel</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f3f6fb;
+}
+
+header{
+    background:#111827;
+    color:white;
+    padding:18px;
+    text-align:center;
+    font-size:26px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:25px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 15px #0002;
+}
+
+h2{
+    color:#2563eb;
+}
+
+.status{
+    color:#16a34a;
+    font-weight:bold;
+}
+
+button{
+    padding:12px 18px;
+    border:0;
+    border-radius:8px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#16a34a;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:12px;
+    border-bottom:1px solid #ddd;
+}
+
+a{
+    color:#2563eb;
+    text-decoration:none;
+}
+
+.footer{
+    text-align:center;
+    padding:25px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<header>
+ReferPro Worker Panel
+</header>
+
+
+<div class="container">
+
+
+<div class="cards">
+
+
+<div class="card">
+
+<h2>Worker Status</h2>
+
+<p class="status">
+Active
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>Assigned Tasks</h2>
+
+<h1>
+0
+</h1>
+
+<p>
+Pending tasks
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>Completed</h2>
+
+<h1>
+0
+</h1>
+
+<p>
+Completed tasks
+</p>
+
+</div>
+
+
+</div>
+
+
+
+<br>
+
+
+
+<div class="card">
+
+<h2>Task List</h2>
+
+
+<table>
+
+<tr>
+<th>Task</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+
+<tr>
+
+<td>Customer Support</td>
+
+<td>Pending</td>
+
+<td>
+<button>
+Start
+</button>
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>Account Review</td>
+
+<td>Pending</td>
+
+<td>
+<button>
+Start
+</button>
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>Data Update</td>
+
+<td>Pending</td>
+
+<td>
+<button>
+Start
+</button>
+</td>
+
+</tr>
+
+
+</table>
+
+
+</div>
+
+
+
+<div class="card">
+
+<h2>Worker Information</h2>
+
+<p>Name: Worker</p>
+
+<p>Department: Support</p>
+
+<p>Status: Active</p>
+
+</div>
+
+
+
+<p style="text-align:center">
+<a href="dashboard.html">
+Back To Dashboard
+</a>
+</p>
+
+
+
+</div>
+
+
+<div class="footer">
+
+ReferPro Worker Panel
+
+</div>
+
+
+</body>
+</html>

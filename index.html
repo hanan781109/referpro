@@ -1,222 +1,317 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ReferPro</title>
+<title>ReferPro - Register</title>
 
 <style>
+
+*{
+    box-sizing:border-box;
+}
+
 body{
     margin:0;
-    font-family:Arial, sans-serif;
-    background:#f5f7fb;
-    color:#222;
+    font-family:Arial,sans-serif;
+    background:#f3f6fb;
+    min-height:100vh;
 }
 
 header{
     background:#111827;
     color:white;
-    padding:18px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.logo{
+    padding:20px;
+    text-align:center;
     font-size:28px;
     font-weight:bold;
 }
 
-.logo span:nth-child(1){color:red;}
-.logo span:nth-child(2){color:#3b82f6;}
-.logo span:nth-child(3){color:#22c55e;}
-
-nav a{
-    color:white;
-    text-decoration:none;
-    margin:0 8px;
-}
-
-.hero{
-    background:linear-gradient(135deg,#2563eb,#16a34a);
-    color:white;
-    padding:60px 20px;
-    text-align:center;
-}
-
-.hero h1{
-    font-size:45px;
-}
-
-.btn{
-    background:white;
-    color:#2563eb;
-    padding:12px 25px;
-    border-radius:8px;
-    text-decoration:none;
-    font-weight:bold;
-}
-
 .container{
-    max-width:1100px;
-    margin:auto;
-    padding:25px;
-}
-
-.cards{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-    gap:20px;
+    max-width:500px;
+    margin:40px auto;
+    padding:20px;
 }
 
 .card{
     background:white;
-    padding:25px;
-    border-radius:15px;
-    box-shadow:0 5px 15px #0002;
+    padding:30px;
+    border-radius:16px;
+    box-shadow:0 5px 20px #0002;
 }
 
-.card h2{
+h2{
+    text-align:center;
     color:#2563eb;
+    margin-top:0;
 }
 
-.deposit{
-    border-top:5px solid #22c55e;
+.subtitle{
+    text-align:center;
+    color:#666;
+    margin-bottom:25px;
+}
+
+label{
+    display:block;
+    margin-top:15px;
+    margin-bottom:6px;
+    font-weight:bold;
+}
+
+input{
+    width:100%;
+    padding:13px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:15px;
+}
+
+input:focus{
+    outline:none;
+    border-color:#2563eb;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    margin-top:25px;
+    background:#2563eb;
+    color:white;
+    border:0;
+    border-radius:8px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#16a34a;
+}
+
+button:disabled{
+    background:#999;
+    cursor:not-allowed;
+}
+
+.login{
+    text-align:center;
+    margin-top:20px;
+}
+
+.login a{
+    color:#2563eb;
+    text-decoration:none;
+    font-weight:bold;
 }
 
 .footer{
-    background:#111827;
-    color:white;
     text-align:center;
-    padding:20px;
+    color:#777;
+    margin-top:25px;
+    font-size:14px;
 }
+
 </style>
 
 </head>
 
 <body>
 
-
 <header>
-
-<div class="logo">
-<span>R</span><span>efer</span><span>Pro</span>
-</div>
-
-<nav>
-<a href="#">Home</a>
-<a href="register.html">Register</a>
-<a href="login.html">Login</a>
-<a href="dashboard.html">Dashboard</a>
-</nav>
-
+    ReferPro
 </header>
-
-
-
-<section class="hero">
-
-<h1>Welcome To ReferPro</h1>
-
-<p>
-Manage your account, referrals and services easily.
-</p>
-
-<br>
-
-<a class="btn" href="register.html">
-Create Account
-</a>
-
-</section>
-
 
 
 <div class="container">
 
-
-<div class="cards">
-
-
-<div class="card deposit">
-
-<h2>Deposit</h2>
-
-<h1>Rs. 500</h1>
-
-<p>
-Payment Method: Easypaisa
-</p>
-
-<p>
-Account Number:
-<b>03263210958</b>
-</p>
-
-</div>
-
-
-
 <div class="card">
 
-<h2>Account</h2>
+<h2>Create Account</h2>
 
-<p>
-Create your account and access your dashboard.
+<p class="subtitle">
+Join ReferPro and start building your referral team.
 </p>
 
-<a href="register.html">
-Register Now
+
+<form id="registerForm">
+
+<label>Full Name</label>
+
+<input
+    type="text"
+    id="name"
+    placeholder="Enter your name"
+    required
+>
+
+
+<label>Email</label>
+
+<input
+    type="email"
+    id="email"
+    placeholder="Enter your email"
+    required
+>
+
+
+<label>Phone</label>
+
+<input
+    type="tel"
+    id="phone"
+    placeholder="Enter your phone number"
+    required
+>
+
+
+<label>Password</label>
+
+<input
+    type="password"
+    id="password"
+    placeholder="Create password"
+    minlength="6"
+    required
+>
+
+
+<label>Referral Code</label>
+
+<input
+    type="text"
+    id="referral"
+    placeholder="Enter referral code (optional)"
+>
+
+
+<button type="submit" id="registerButton">
+    Create Account
+</button>
+
+</form>
+
+
+<div class="login">
+
+Already have an account?
+
+<a href="login.html">
+Login
 </a>
 
 </div>
 
-
-
-<div class="card">
-
-<h2>Referral</h2>
-
-<p>
-Share your referral and manage your network.
-</p>
-
 </div>
-
-
-
-<div class="card">
-
-<h2>Withdrawal</h2>
-
-<p>
-Request withdrawal through your account panel.
-</p>
-
-</div>
-
-
-</div>
-
-
-</div>
-
 
 
 <div class="footer">
-
-<p>
-Admin Support:
-hananjanweribro@gmail.com
-</p>
-
-<p>
-© 2026 ReferPro
-</p>
+    © 2026 ReferPro. All rights reserved.
+</div>
 
 </div>
 
 
-</body>
-</html>
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+    getAuth,
+    createUserWithEmailAndPassword
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+    getDatabase,
+    ref,
+    set
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyB2MHb9flfcWipUxDM6hF3Hgvy9ZsBHV0g",
+
+    authDomain: "referpro-65d27.firebaseapp.com",
+
+    databaseURL:
+    "https://referpro-65d27-default-rtdb.firebaseio.com",
+
+    projectId: "referpro-65d27",
+
+    storageBucket:
+    "referpro-65d27.firebasestorage.app",
+
+    messagingSenderId: "257409426857",
+
+    appId:
+    "1:257409426857:web:8cfcdf79eab219d6f890b8"
+
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getDatabase(app);
+
+
+const form = document.getElementById("registerForm");
+
+const button = document.getElementById("registerButton");
+
+
+form.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+
+    const name =
+    document.getElementById("name").value.trim();
+
+    const email =
+    document.getElementById("email").value.trim();
+
+    const phone =
+    document.getElementById("phone").value.trim();
+
+    const password =
+    document.getElementById("password").value;
+
+    const referral =
+    document.getElementById("referral").value.trim();
+
+
+    button.disabled = true;
+
+    button.innerText = "Creating Account...";
+
+
+    try{
+
+
+        const userCredential =
+        await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+
+
+        const uid =
+        userCredential.user.uid;
+
+
+        const myCode =
+        "REF" +
+        uid.substring(0,6).toUpperCase();
+
+
+        await

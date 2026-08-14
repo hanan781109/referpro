@@ -1,30 +1,210 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ReferPro - Register</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f3f6fb;
+}
+
+header{
+    background:#111827;
+    color:white;
+    padding:20px;
+    text-align:center;
+    font-size:26px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:500px;
+    margin:40px auto;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    padding:30px;
+    border-radius:16px;
+    box-shadow:0 5px 20px #0002;
+}
+
+h2{
+    text-align:center;
+    color:#2563eb;
+}
+
+label{
+    display:block;
+    margin-top:15px;
+    margin-bottom:6px;
+    font-weight:bold;
+}
+
+input{
+    width:100%;
+    padding:13px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:15px;
+    box-sizing:border-box;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    margin-top:25px;
+    background:#2563eb;
+    color:white;
+    border:0;
+    border-radius:8px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:disabled{
+    background:#999;
+}
+
+.login{
+    text-align:center;
+    margin-top:20px;
+}
+
+.login a{
+    color:#2563eb;
+    font-weight:bold;
+    text-decoration:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+ReferPro
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Create Account</h2>
+
+<form id="registerForm">
+
+<label>Full Name</label>
+<input
+    type="text"
+    id="name"
+    placeholder="Enter your full name"
+    required
+>
+
+<label>Email</label>
+<input
+    type="email"
+    id="email"
+    placeholder="Enter your email"
+    required
+>
+
+<label>Phone</label>
+<input
+    type="tel"
+    id="phone"
+    placeholder="Enter your phone number"
+    required
+>
+
+<label>Password</label>
+<input
+    type="password"
+    id="password"
+    placeholder="Minimum 6 characters"
+    minlength="6"
+    required
+>
+
+<label>Referral Code</label>
+<input
+    type="text"
+    id="referral"
+    placeholder="Enter referral code"
+>
+
+<button type="submit" id="registerButton">
+Create Account
+</button>
+
+</form>
+
+<div class="login">
+Already have an account?
+<a href="login.html">Login</a>
+</div>
+
+</div>
+
+</div>
+
+
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import { 
-getAuth,
-createUserWithEmailAndPassword 
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
-getDatabase,
-ref,
-set
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    getAuth,
+    createUserWithEmailAndPassword
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+import {
+    getDatabase,
+    ref,
+    set
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+/* FIREBASE CONFIG */
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB2MHb9flfcWipUxDM6hF3Hgvy9ZsBHV0g",
-  authDomain: "referpro-65d27.firebaseapp.com",
-  projectId: "referpro-65d27",
-  storageBucket: "referpro-65d27.firebasestorage.app",
-  messagingSenderId: "257409426857",
-  appId: "1:257409426857:web:8cfcdf79eab219d6f890b8",
-  measurementId: "G-GFC4WMB2HN"
+
+    apiKey: "AIzaSyB2MHb9flfcWipUxDM6hF3Hgvy9ZsBHV0g",
+
+    authDomain: "referpro-65d27.firebaseapp.com",
+
+    databaseURL:
+    "https://referpro-65d27-default-rtdb.firebaseio.com",
+
+    projectId: "referpro-65d27",
+
+    storageBucket:
+    "referpro-65d27.firebasestorage.app",
+
+    messagingSenderId: "257409426857",
+
+    appId:
+    "1:257409426857:web:8cfcdf79eab219d6f890b8"
+
 };
 
+
+/* INITIALIZE FIREBASE */
 
 const app = initializeApp(firebaseConfig);
 
@@ -33,74 +213,123 @@ const auth = getAuth(app);
 const db = getDatabase(app);
 
 
+/* REGISTER */
 
-document.querySelector("form").addEventListener("submit",(e)=>{
+const form =
+document.getElementById("registerForm");
 
-e.preventDefault();
-
-
-let inputs=document.querySelectorAll("input");
-
-
-let name = inputs[0].value;
-
-let email = inputs[1].value;
-
-let phone = inputs[2].value;
-
-let password = inputs[3].value;
-
-let referral = inputs[4].value;
+const button =
+document.getElementById("registerButton");
 
 
+form.addEventListener("submit", async (e) => {
 
-createUserWithEmailAndPassword(auth,email,password)
-
-.then((userCredential)=>{
-
-
-let uid = userCredential.user.uid;
+    e.preventDefault();
 
 
-let myCode = "REF" + uid.substring(0,6).toUpperCase();
+    const name =
+    document.getElementById("name").value.trim();
+
+    const email =
+    document.getElementById("email").value.trim();
+
+    const phone =
+    document.getElementById("phone").value.trim();
+
+    const password =
+    document.getElementById("password").value;
+
+    const referral =
+    document.getElementById("referral").value.trim();
 
 
+    button.disabled = true;
 
-set(ref(db,"users/"+uid),{
+    button.innerText = "Creating Account...";
 
 
-name:name,
+    try {
 
-email:email,
+        /* CREATE FIREBASE AUTH ACCOUNT */
 
-phone:phone,
+        const userCredential =
+        await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
 
-referralCode:myCode,
 
-joinedWith:referral,
+        const uid =
+        userCredential.user.uid;
 
-createdAt:new Date().toString()
 
+        /* GENERATE REFERRAL CODE */
+
+        const myCode =
+        "REF" +
+        uid.substring(0,6).toUpperCase();
+
+
+        /* SAVE USER IN REALTIME DATABASE */
+
+        await set(
+            ref(db, "users/" + uid),
+            {
+
+                name: name,
+
+                email: email,
+
+                phone: phone,
+
+                referralCode: myCode,
+
+                joinedWith: referral,
+
+                createdAt:
+                new Date().toISOString()
+
+            }
+        );
+
+
+        /* SUCCESS */
+
+        alert(
+            "Account Created Successfully!\n\n" +
+            "Your Referral Code: " +
+            myCode
+        );
+
+
+        window.location.href =
+        "login.html";
+
+
+    }
+
+    catch(error) {
+
+        console.error(error);
+
+        alert(
+            "Registration Error:\n\n" +
+            error.message
+        );
+
+
+        button.disabled = false;
+
+        button.innerText =
+        "Create Account";
+
+    }
 
 });
-
-
-alert("Account Created Successfully!");
-
-window.location="login.html";
-
-
-})
-
-
-.catch((error)=>{
-
-alert(error.message);
-
-});
-
-
-});
-
 
 </script>
+
+</body>
+</html>
+```

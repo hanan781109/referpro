@@ -3,448 +3,220 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>ReferPro</title>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f6fa;color:#172033}
-header{background:#172554;color:#fff;padding:16px 6%;display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:26px;font-weight:800}
-.logo span:nth-child(1){color:#ef4444}
-.logo span:nth-child(2){color:#3b82f6}
-.logo span:nth-child(3){color:#22c55e}
-nav button{margin:3px;padding:9px 13px;border:0;border-radius:7px;cursor:pointer}
-.container{max-width:1100px;margin:auto;padding:25px 18px}
-.hero{background:linear-gradient(135deg,#172554,#2563eb);color:#fff;padding:55px 30px;border-radius:20px;margin-bottom:25px}
-.hero h1{font-size:42px;margin:0 0 12px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
-.card{background:#fff;padding:22px;border-radius:15px;box-shadow:0 5px 20px #0001;margin-bottom:20px}
-.stat{font-size:28px;font-weight:bold}
-input,select{width:100%;padding:12px;margin:7px 0 14px;border:1px solid #ccd4df;border-radius:8px}
-.btn{border:0;border-radius:8px;padding:12px 18px;background:#2563eb;color:white;cursor:pointer;font-weight:bold}
-.green{background:#16a34a}.red{background:#dc2626}
-.page{display:none}.page.active{display:block}
-.notice{background:#fff7d6;border-left:5px solid #eab308;padding:16px;border-radius:8px}
-.level{border-top:5px solid #2563eb}
-footer{text-align:center;padding:35px;color:#64748b}
-table{width:100%;border-collapse:collapse}
-td,th{padding:10px;border-bottom:1px solid #ddd;text-align:left}
-@media(max-width:700px){.hero h1{font-size:32px}nav{display:none}}
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f5f7fb;
+    color:#222;
+}
+
+header{
+    background:#111827;
+    color:white;
+    padding:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:bold;
+}
+
+.logo span:nth-child(1){color:red;}
+.logo span:nth-child(2){color:#3b82f6;}
+.logo span:nth-child(3){color:#22c55e;}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    margin:0 8px;
+}
+
+.hero{
+    background:linear-gradient(135deg,#2563eb,#16a34a);
+    color:white;
+    padding:60px 20px;
+    text-align:center;
+}
+
+.hero h1{
+    font-size:45px;
+}
+
+.btn{
+    background:white;
+    color:#2563eb;
+    padding:12px 25px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+    padding:25px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 15px #0002;
+}
+
+.card h2{
+    color:#2563eb;
+}
+
+.deposit{
+    border-top:5px solid #22c55e;
+}
+
+.footer{
+    background:#111827;
+    color:white;
+    text-align:center;
+    padding:20px;
+}
 </style>
+
 </head>
 
 <body>
 
+
 <header>
+
 <div class="logo">
 <span>R</span><span>efer</span><span>Pro</span>
 </div>
+
 <nav>
-<button onclick="show('home')">Home</button>
-<button onclick="show('register')">Register</button>
-<button onclick="show('login')">Login</button>
-<button onclick="show('dashboard')">Dashboard</button>
+<a href="#">Home</a>
+<a href="register.html">Register</a>
+<a href="login.html">Login</a>
+<a href="dashboard.html">Dashboard</a>
 </nav>
+
 </header>
 
-<!-- HOME -->
-<section id="home" class="page active">
-<div class="container">
 
-<div class="hero">
-<h1>Build your ReferPro network</h1>
-<p>Manage your account, purchases, referrals, tasks and legitimate sales commissions from one dashboard.</p>
-<button class="btn green" onclick="show('register')">Create Account</button>
-</div>
 
-<div class="notice">
-<b>Important:</b> The Rs.500 payment shown below is for a genuine
-product/service package. It is not a guaranteed investment return.
-Referral rewards must be based on genuine qualifying sales.
-</div>
+<section class="hero">
 
-<div class="grid">
+<h1>Welcome To ReferPro</h1>
 
-<div class="card">
-<h3>Product / Service Package</h3>
-<div class="stat">Rs. 500</div>
-<p>One-time package purchase.</p>
-<button class="btn" onclick="show('deposit')">View Payment</button>
-</div>
+<p>
+Manage your account, referrals and services easily.
+</p>
 
-<div class="card">
-<h3>Referral Program</h3>
-<p>Referral rewards are connected to qualifying sales rather than deposits.</p>
-<button class="btn" onclick="show('referrals')">View Levels</button>
-</div>
+<br>
 
-<div class="card">
-<h3>Daily Tasks</h3>
-<p>Complete genuine sponsored tasks when available.</p>
-<button class="btn" onclick="show('tasks')">Open Tasks</button>
-</div>
+<a class="btn" href="register.html">
+Create Account
+</a>
 
-</div>
-</div>
 </section>
 
-<!-- REGISTER -->
-<section id="register" class="page">
-<div class="container">
-<div class="card">
 
-<h2>Create Account</h2>
 
-<label>Full Name</label>
-<input id="regName" placeholder="Full name">
-
-<label>Email</label>
-<input id="regEmail" type="email" placeholder="Email">
-
-<label>Password</label>
-<input id="regPassword" type="password" placeholder="Password">
-
-<label>Referral Code</label>
-<input id="regReferral" placeholder="Optional">
-
-<button class="btn green" onclick="registerUser()">Register</button>
-
-<p id="registerMsg"></p>
-
-</div>
-</div>
-</section>
-
-<!-- LOGIN -->
-<section id="login" class="page">
-<div class="container">
-<div class="card">
-
-<h2>Login</h2>
-
-<label>Email</label>
-<input id="loginEmail" type="email">
-
-<label>Password</label>
-<input id="loginPassword" type="password">
-
-<button class="btn" onclick="loginUser()">Login</button>
-
-<p id="loginMsg"></p>
-
-</div>
-</div>
-</section>
-
-<!-- DASHBOARD -->
-<section id="dashboard" class="page">
 <div class="container">
 
-<h2>My Dashboard</h2>
 
-<div class="grid">
+<div class="cards">
+
+
+<div class="card deposit">
+
+<h2>Deposit</h2>
+
+<h1>Rs. 500</h1>
+
+<p>
+Payment Method: Easypaisa
+</p>
+
+<p>
+Account Number:
+<b>03263210958</b>
+</p>
+
+</div>
+
+
 
 <div class="card">
-<h3>Welcome</h3>
-<div class="stat" id="userName">Guest</div>
-<p id="userEmail">Not logged in</p>
+
+<h2>Account</h2>
+
+<p>
+Create your account and access your dashboard.
+</p>
+
+<a href="register.html">
+Register Now
+</a>
+
 </div>
+
+
 
 <div class="card">
-<h3>Wallet</h3>
-<div class="stat">Rs. 0</div>
-<p>Available commission balance</p>
+
+<h2>Referral</h2>
+
+<p>
+Share your referral and manage your network.
+</p>
+
 </div>
+
+
 
 <div class="card">
-<h3>My Referrals</h3>
-<div class="stat">0</div>
-<p>Qualifying referrals</p>
-</div>
 
-<div class="card">
-<h3>Current Level</h3>
-<div class="stat">Level 1</div>
-<p>Based on qualifying sales</p>
-</div>
+<h2>Withdrawal</h2>
+
+<p>
+Request withdrawal through your account panel.
+</p>
 
 </div>
 
-<div class="grid">
-<div class="card">
-<h3>Deposit / Purchase</h3>
-<p>Product/service package: <b>Rs.500</b></p>
-<button class="btn" onclick="show('deposit')">Make Payment</button>
-</div>
-
-<div class="card">
-<h3>Withdraw Commission</h3>
-<p>Withdraw legitimately earned commission.</p>
-<button class="btn red" onclick="show('withdraw')">Withdraw</button>
-</div>
-</div>
-
-</div>
-</section>
-
-<!-- DEPOSIT -->
-<section id="deposit" class="page">
-<div class="container">
-<div class="card">
-
-<h2>Rs.500 Product / Service Purchase</h2>
-
-<div class="notice">
-<b>Payment Details</b><br><br>
-Amount: <b>Rs. 500</b><br>
-Method: <b>Easypaisa</b><br>
-Account Number: <b>03263210958</b><br><br>
-After payment, enter your transaction/reference ID below.
-</div>
-
-<label>Sender Number</label>
-<input id="senderNumber" placeholder="03XXXXXXXXX">
-
-<label>Transaction / TRX ID</label>
-<input id="trx" placeholder="Transaction ID">
-
-<button class="btn green" onclick="submitPayment()">
-Submit Payment Reference
-</button>
-
-<p id="paymentMsg"></p>
-
-</div>
-</div>
-</section>
-
-<!-- REFERRALS -->
-<section id="referrals" class="page">
-<div class="container">
-
-<h2>Referral Program</h2>
-
-
-<div class="grid">
-
-<div class="card level">
-<h3>Level 1</h3>
-<div class="stat">Rs.150</div>
-<p>After 5 qualifying sales</p>
-</div>
-
-<div class="card level">
-<h3>Level 2</h3>
-<div class="stat">Rs.180</div>
-<p>After 12 qualifying sales</p>
-</div>
-
-<div class="card level">
-<h3>Level 3</h3>
-<div class="stat">Rs.250</div>
-<p>After 20 qualifying sales</p>
-</div>
-
-<div class="card level">
-<h3>Level 4</h3>
-<div class="stat">Rs.280</div>
-<p>After 35 qualifying sales</p>
-</div>
-
-<div class="card level">
-<h3>Level 5</h3>
-<div class="stat">Rs.350</div>
-<p>After 50 qualifying sales</p>
-</div>
 
 </div>
 
-<div class="card">
-<h3>Your Referral Link</h3>
-<input value="https://hanan781109.github.io/referpro/?ref=REFPRO" readonly>
-<button class="btn" onclick="copyReferral()">Copy Link</button>
-</div>
-
-</div>
-</section>
-
-<!-- TASKS -->
-<section id="tasks" class="page">
-<div class="container">
-
-<h2>Daily Tasks</h2>
-
-<div class="grid">
-
-<div class="card">
-<h3>Task 1</h3>
-<p>Sponsored content task</p>
-<button class="btn green" onclick="completeTask(1)">Complete</button>
-</div>
-
-<div class="card">
-<h3>Task 2</h3>
-<p>Sponsored content task</p>
-<button class="btn green" onclick="completeTask(2)">Complete</button>
-</div>
-
-<div class="card">
-<h3>Task 3</h3>
-<p>Sponsored content task</p>
-<button class="btn green" onclick="completeTask(3)">Complete</button>
-</div>
 
 </div>
 
-<p id="taskMsg"></p>
+
+
+<div class="footer">
+
+<p>
+Admin Support:
+hananjanweribro@gmail.com
+</p>
+
+<p>
+© 2026 ReferPro
+</p>
 
 </div>
-</section>
 
-<!-- WITHDRAW -->
-<section id="withdraw" class="page">
-<div class="container">
-<div class="card">
-
-<h2>Commission Withdrawal</h2>
-
-<div class="notice">
-Withdrawals are only for legitimately earned, verified commissions.
-A backend and payment-provider integration is required to actually
-transfer money.
-</div>
-
-<label>Payment Method</label>
-<select>
-<option>Easypaisa</option>
-<option>JazzCash</option>
-</select>
-
-<label>Account Number</label>
-<input placeholder="03XXXXXXXXX">
-
-<label>Amount</label>
-<input type="number" placeholder="Enter amount">
-
-<button class="btn red" onclick="withdrawRequest()">
-Submit Withdrawal Request
-</button>
-
-<p id="withdrawMsg"></p>
-
-</div>
-</div>
-</section>
-
-<footer>
-<p><b>ReferPro</b></p>
-<p>Admin Support: hananjanweribro@gmail.com</p>
-<p>© 2026 ReferPro</p>
-</footer>
-
-<script>
-
-function show(id){
-document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
-document.getElementById(id).classList.add('active');
-window.scrollTo(0,0);
-}
-
-function registerUser(){
-
-let name=document.getElementById('regName').value.trim();
-let email=document.getElementById('regEmail').value.trim();
-
-if(!name || !email){
-document.getElementById('registerMsg').innerText=
-'Please enter your name and email.';
-return;
-}
-
-localStorage.setItem('referproUser',
-JSON.stringify({name:name,email:email}));
-
-document.getElementById('registerMsg').innerText=
-'Account created for this browser.';
-
-setTimeout(()=>show('dashboard'),700);
-}
-
-function loginUser(){
-
-let email=document.getElementById('loginEmail').value.trim();
-
-if(!email){
-document.getElementById('loginMsg').innerText=
-'Enter your email.';
-return;
-}
-
-let user=JSON.parse(
-localStorage.getItem('referproUser') || 'null'
-);
-
-if(!user){
-user={name:'User',email:email};
-localStorage.setItem(
-'referproUser',JSON.stringify(user)
-);
-}
-
-document.getElementById('userName').innerText=user.name;
-document.getElementById('userEmail').innerText=user.email;
-
-show('dashboard');
-}
-
-function submitPayment(){
-
-let sender=document.getElementById('senderNumber').value.trim();
-let trx=document.getElementById('trx').value.trim();
-
-if(!sender || !trx){
-document.getElementById('paymentMsg').innerText=
-'Please enter sender number and TRX ID.';
-return;
-}
-
-document.getElementById('paymentMsg').innerText=
-'Payment reference submitted for verification.';
-}
-
-function completeTask(n){
-
-document.getElementById('taskMsg').innerText=
-'Task '+n+' marked as completed in this interface.';
-
-}
-
-function withdrawRequest(){
-
-document.getElementById('withdrawMsg').innerText=
-'Withdrawal request recorded in this interface. Actual transfer requires backend/payment integration.';
-}
-
-function copyReferral(){
-
-navigator.clipboard.writeText(
-'https://hanan781109.github.io/referpro/?ref=REFPRO'
-);
-
-alert('Referral link copied.');
-
-}
-
-let user=JSON.parse(
-localStorage.getItem('referproUser') || 'null'
-);
-
-if(user){
-document.getElementById('userName').innerText=user.name;
-document.getElementById('userEmail').innerText=user.email;
-}
-
-</script>
 
 </body>
 </html>

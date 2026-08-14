@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ReferPro Login</title>
+<title>ReferPro Admin Panel</title>
 
 <style>
 
@@ -25,57 +25,83 @@ header{
 }
 
 .container{
-    max-width:420px;
-    margin:40px auto;
+    max-width:1000px;
+    margin:30px auto;
+    padding:20px;
+}
+
+.card{
     background:white;
-    padding:30px;
+    padding:25px;
     border-radius:15px;
     box-shadow:0 5px 20px #0002;
+    margin-bottom:20px;
 }
 
 h2{
-    text-align:center;
     color:#2563eb;
+    margin-top:0;
 }
 
-label{
-    display:block;
-    margin-top:15px;
+.stats{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
 }
 
-input{
+.stat{
+    flex:1;
+    min-width:180px;
+    background:#f8fafc;
+    padding:20px;
+    border-radius:12px;
+    text-align:center;
+}
+
+.stat h3{
+    margin:0;
+    color:#64748b;
+}
+
+.stat p{
+    font-size:30px;
+    font-weight:bold;
+    color:#2563eb;
+    margin:10px 0 0;
+}
+
+table{
     width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
     padding:12px;
-    margin:8px 0;
-    border:1px solid #ccc;
-    border-radius:8px;
-    box-sizing:border-box;
+    border-bottom:1px solid #ddd;
+    text-align:left;
 }
 
-button{
-    width:100%;
-    padding:13px;
+th{
+    background:#f8fafc;
+}
+
+.logout{
+    background:#dc2626;
     margin-top:15px;
-    background:#2563eb;
-    color:white;
-    border:0;
-    border-radius:8px;
-    font-size:16px;
-    cursor:pointer;
 }
 
-button:disabled{
-    background:#999;
+.logout:hover{
+    background:#b91c1c;
 }
 
-a{
-    color:#2563eb;
-    text-decoration:none;
-}
-
-.footer{
+.loading{
     text-align:center;
-    margin-top:20px;
+    padding:20px;
+    color:#666;
+}
+
+.error{
+    color:#dc2626;
 }
 
 </style>
@@ -85,56 +111,52 @@ a{
 <body>
 
 <header>
-ReferPro Login
+ReferPro Admin Panel
 </header>
 
 
 <div class="container">
 
-<h2>Welcome Back</h2>
 
+<div class="card">
 
-<form id="loginForm">
+<h2>Admin Dashboard</h2>
 
-<label>Email</label>
+<div class="stats">
 
-<input
-    type="email"
-    id="email"
-    placeholder="Enter your email"
-    required
->
+<div class="stat">
+<h3>Total Users</h3>
+<p id="totalUsers">0</p>
+</div>
 
+<div class="stat">
+<h3>Total Admins</h3>
+<p id="totalAdmins">0</p>
+</div>
 
-<label>Password</label>
+</div>
 
-<input
-    type="password"
-    id="password"
-    placeholder="Enter password"
-    required
->
-
-
-<button type="submit" id="loginButton">
-Login
+<button class="logout" id="logoutButton">
+Logout
 </button>
 
-</form>
+</div>
 
 
-<div class="footer">
 
-<p>
-New user?
-<a href="register.html">
-Create Account
-</a>
-</p>
+<div class="card">
 
+<h2>Registered Users</h2>
+
+<div id="usersArea" class="loading">
+Loading users...
 </div>
 
 </div>
+
+
+</div>
+
 
 
 <script type="module">
@@ -147,7 +169,8 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
     getAuth,
-    signInWithEmailAndPassword
+    onAuthStateChanged,
+    signOut
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
@@ -193,66 +216,151 @@ const auth = getAuth(app);
 const db = getDatabase(app);
 
 
-const form =
-document.getElementById("loginForm");
 
-const button =
-document.getElementById("loginButton");
+/*
+ADMIN UID
+*/
 
-
-form.addEventListener("submit", async (e) => {
-
-    e.preventDefault();
+const ADMIN_UID =
+"WK9SL4msIHWZR4zelvWM9Wko2fl2";
 
 
-    const email =
-    document.getElementById("email").value.trim();
 
-    const password =
-    document.getElementById("password").value;
+/*
+CHECK LOGIN
+*/
 
+onAuthStateChanged(auth, async (user) => {
 
-    button.disabled = true;
+    if(!user){
 
-    button.innerText = "Logging in...";
+        window.location.href =
+        "login.html";
 
+        return;
 
-    try {
-
-        const userCredential =
-        await signInWithEmailAndPassword(
-            auth,
-            email,
-            password
-        );
+    }
 
 
-        const uid =
-        userCredential.user.uid;
+    if(user.uid !== ADMIN_UID){
+
+        alert("Access denied. Admin only.");
+
+        await signOut(auth);
+
+        window.location.href =
+        "login.html";
+
+        return;
+
+    }
 
 
-        /*
-        Check whether this UID is an admin
-        */
+    loadUsers();
 
-        const adminSnapshot =
-        await get(
-            ref(db, "admins/" + uid)
-        );
+});
 
 
-        if(adminSnapshot.exists() &&
-           adminSnapshot.val() === true){
 
-            window.location.href =
-            "admin.html";
+/*
+LOAD USERS
+*/
 
-        }else{
+async function loadUsers(){
 
-            window.location.href =
-            "dashboard.html";
+    try{
+
+        const snapshot =
+        await get(ref(db,"users"));
+
+        const usersArea =
+        document.getElementById("usersArea");
+
+
+        if(!snapshot.exists()){
+
+            usersArea.innerHTML =
+            "No users found.";
+
+            return;
 
         }
+
+
+        const users =
+        snapshot.val();
+
+
+        let html = `
+
+        <table>
+
+        <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Referral Code</th>
+        <th>Joined With</th>
+        </tr>
+
+        `;
+
+
+        let count = 0;
+
+
+        for(const uid in users){
+
+            const user =
+            users[uid];
+
+            count++;
+
+
+            html += `
+
+            <tr>
+
+            <td>
+            ${user.name || "-"}
+            </td>
+
+            <td>
+            ${user.email || "-"}
+            </td>
+
+            <td>
+            ${user.phone || "-"}
+            </td>
+
+            <td>
+            ${user.referralCode || "-"}
+            </td>
+
+            <td>
+            ${user.joinedWith || "-"}
+            </td>
+
+            </tr>
+
+            `;
+
+        }
+
+
+        html += "</table>";
+
+
+        usersArea.innerHTML =
+        html;
+
+
+        document.getElementById("totalUsers")
+        .innerText = count;
+
+
+        document.getElementById("totalAdmins")
+        .innerText = "1";
 
 
     }
@@ -260,21 +368,35 @@ form.addEventListener("submit", async (e) => {
 
         console.error(error);
 
-        alert(
-            "Login failed:\n\n" +
-            error.message
-        );
-
-
-        button.disabled = false;
-
-        button.innerText = "Login";
+        document.getElementById("usersArea")
+        .innerHTML =
+        '<p class="error">Unable to load users: ' +
+        error.message +
+        '</p>';
 
     }
+
+}
+
+
+
+/*
+LOGOUT
+*/
+
+document
+.getElementById("logoutButton")
+.addEventListener("click", async () => {
+
+    await signOut(auth);
+
+    window.location.href =
+    "login.html";
 
 });
 
 </script>
+
 
 </body>
 </html>

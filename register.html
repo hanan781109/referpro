@@ -11,26 +11,27 @@
 
 body{
     margin:0;
-    font-family:Arial,sans-serif;
+    font-family:Arial;
     background:#f3f6fb;
 }
 
 header{
     background:#111827;
     color:white;
-    padding:18px;
+    padding:20px;
     text-align:center;
     font-size:25px;
     font-weight:bold;
 }
 
 .container{
+    width:90%;
     max-width:420px;
     margin:40px auto;
     background:white;
     padding:30px;
     border-radius:15px;
-    box-shadow:0 5px 20px #0002;
+    box-shadow:0 5px 20px #0003;
 }
 
 h2{
@@ -41,20 +42,21 @@ h2{
 input{
     width:100%;
     padding:12px;
-    margin:10px 0;
-    border:1px solid #ccc;
+    margin:8px 0;
     border-radius:8px;
+    border:1px solid #ccc;
+    box-sizing:border-box;
 }
 
 button{
     width:100%;
     padding:13px;
+    margin-top:15px;
     background:#2563eb;
     color:white;
     border:0;
     border-radius:8px;
     font-size:16px;
-    cursor:pointer;
 }
 
 button:hover{
@@ -62,13 +64,7 @@ button:hover{
 }
 
 a{
-    text-decoration:none;
     color:#2563eb;
-}
-
-.footer{
-    text-align:center;
-    margin-top:20px;
 }
 
 </style>
@@ -78,75 +74,105 @@ a{
 
 <body>
 
-
 <header>
 ReferPro Register
 </header>
 
 
-
 <div class="container">
-
 
 <h2>Create Account</h2>
 
 
-<form>
+<input id="name" type="text" placeholder="Full Name">
+
+<input id="email" type="email" placeholder="Email">
+
+<input id="phone" type="number" placeholder="Phone Number">
+
+<input id="password" type="password" placeholder="Password">
+
+<input id="referral" type="text" placeholder="Referral Code">
 
 
-<label>Full Name</label>
-
-<input type="text" placeholder="Enter your name" required>
-
-
-
-<label>Email</label>
-
-<input type="email" placeholder="Enter email" required>
-
-
-
-<label>Phone Number</label>
-
-<input type="number" placeholder="03XXXXXXXXX" required>
-
-
-
-<label>Password</label>
-
-<input type="password" placeholder="Create password" required>
-
-
-
-<label>Referral Code</label>
-
-<input type="text" placeholder="Referral code (optional)">
-
-
-
-<button type="submit">
+<button onclick="registerUser()">
 Create Account
 </button>
 
 
-</form>
-
-
-
-<div class="footer">
-
-<p>
+<p style="text-align:center;">
 Already have account?
-<a href="login.html">
-Login
-</a>
+<a href="login.html">Login</a>
 </p>
 
-</div>
-
 
 </div>
 
+
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.1/firebase-app.js";
+
+import { 
+getAuth,
+createUserWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/12.7.1/firebase-auth.js";
+
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyB2MHb9flfcWipUxDM6hF3Hgvy9ZsBHV0g",
+
+authDomain: "referpro-65d27.firebaseapp.com",
+
+projectId: "referpro-65d27",
+
+storageBucket: "referpro-65d27.firebasestorage.app",
+
+messagingSenderId: "257409426857",
+
+appId: "1:257409426857:web:8cfcdf79eab219d6f890b8",
+
+measurementId: "G-GFC4WMB2HN"
+
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+
+
+window.registerUser = function(){
+
+let email = document.getElementById("email").value;
+
+let password = document.getElementById("password").value;
+
+
+createUserWithEmailAndPassword(auth,email,password)
+
+.then((userCredential)=>{
+
+alert("Account Created Successfully!");
+
+window.location.href="login.html";
+
+})
+
+.catch((error)=>{
+
+alert(error.message);
+
+});
+
+
+}
+
+
+</script>
 
 
 </body>

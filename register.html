@@ -1,141 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>ReferPro Register</title>
-
-<style>
-
-body{
-    margin:0;
-    font-family:Arial;
-    background:#f3f6fb;
-}
-
-header{
-    background:#111827;
-    color:white;
-    padding:20px;
-    text-align:center;
-    font-size:25px;
-    font-weight:bold;
-}
-
-.container{
-    width:90%;
-    max-width:420px;
-    margin:40px auto;
-    background:white;
-    padding:30px;
-    border-radius:15px;
-    box-shadow:0 5px 20px #0003;
-}
-
-h2{
-    text-align:center;
-    color:#2563eb;
-}
-
-input{
-    width:100%;
-    padding:12px;
-    margin:8px 0;
-    border-radius:8px;
-    border:1px solid #ccc;
-    box-sizing:border-box;
-}
-
-button{
-    width:100%;
-    padding:13px;
-    margin-top:15px;
-    background:#2563eb;
-    color:white;
-    border:0;
-    border-radius:8px;
-    font-size:16px;
-}
-
-button:hover{
-    background:#16a34a;
-}
-
-a{
-    color:#2563eb;
-}
-
-</style>
-
-</head>
-
-
-<body>
-
-<header>
-ReferPro Register
-</header>
-
-
-<div class="container">
-
-<h2>Create Account</h2>
-
-
-<input id="name" type="text" placeholder="Full Name">
-
-<input id="email" type="email" placeholder="Email">
-
-<input id="phone" type="number" placeholder="Phone Number">
-
-<input id="password" type="password" placeholder="Password">
-
-<input id="referral" type="text" placeholder="Referral Code">
-
-
-<button onclick="registerUser()">
-Create Account
-</button>
-
-
-<p style="text-align:center;">
-Already have account?
-<a href="login.html">Login</a>
-</p>
-
-
-</div>
-
-
-
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.1/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import { 
 getAuth,
-createUserWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/12.7.1/firebase-auth.js";
+createUserWithEmailAndPassword 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+import {
+getDatabase,
+ref,
+set
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
 const firebaseConfig = {
-
-apiKey: "AIzaSyB2MHb9flfcWipUxDM6hF3Hgvy9ZsBHV0g",
-
-authDomain: "referpro-65d27.firebaseapp.com",
-
-projectId: "referpro-65d27",
-
-storageBucket: "referpro-65d27.firebasestorage.app",
-
-messagingSenderId: "257409426857",
-
-appId: "1:257409426857:web:8cfcdf79eab219d6f890b8",
-
-measurementId: "G-GFC4WMB2HN"
-
+  apiKey: "AIzaSyB2MHb9flfcWipUxDM6hF3Hgvy9ZsBHV0g",
+  authDomain: "referpro-65d27.firebaseapp.com",
+  projectId: "referpro-65d27",
+  storageBucket: "referpro-65d27.firebasestorage.app",
+  messagingSenderId: "257409426857",
+  appId: "1:257409426857:web:8cfcdf79eab219d6f890b8",
+  measurementId: "G-GFC4WMB2HN"
 };
 
 
@@ -143,24 +30,68 @@ const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
 
+const db = getDatabase(app);
 
 
-window.registerUser = function(){
 
-let email = document.getElementById("email").value;
+document.querySelector("form").addEventListener("submit",(e)=>{
 
-let password = document.getElementById("password").value;
+e.preventDefault();
+
+
+let inputs=document.querySelectorAll("input");
+
+
+let name = inputs[0].value;
+
+let email = inputs[1].value;
+
+let phone = inputs[2].value;
+
+let password = inputs[3].value;
+
+let referral = inputs[4].value;
+
 
 
 createUserWithEmailAndPassword(auth,email,password)
 
 .then((userCredential)=>{
 
+
+let uid = userCredential.user.uid;
+
+
+let myCode = "REF" + uid.substring(0,6).toUpperCase();
+
+
+
+set(ref(db,"users/"+uid),{
+
+
+name:name,
+
+email:email,
+
+phone:phone,
+
+referralCode:myCode,
+
+joinedWith:referral,
+
+createdAt:new Date().toString()
+
+
+});
+
+
 alert("Account Created Successfully!");
 
-window.location.href="login.html";
+window.location="login.html";
+
 
 })
+
 
 .catch((error)=>{
 
@@ -169,11 +100,7 @@ alert(error.message);
 });
 
 
-}
+});
 
 
 </script>
-
-
-</body>
-</html>

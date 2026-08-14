@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ReferPro Dashboard</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f3f6fb;
+}
+
+header{
+    background:#111827;
+    color:white;
+    padding:18px;
+    text-align:center;
+    font-size:25px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+    padding:25px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 15px #0002;
+}
+
+.card h2{
+    color:#2563eb;
+}
+
+.amount{
+    font-size:30px;
+    font-weight:bold;
+    color:#16a34a;
+}
+
+button{
+    padding:12px 20px;
+    background:#2563eb;
+    color:white;
+    border:0;
+    border-radius:8px;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+button:hover{
+    background:#16a34a;
+}
+
+a{
+    text-decoration:none;
+}
+
+.menu{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.menu a{
+    margin:8px;
+    color:#2563eb;
+    font-weight:bold;
+}
+
+.notice{
+    background:#fff7d6;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:20px;
+}
+
+.footer{
+    text-align:center;
+    padding:30px;
+    color:#555;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+ReferPro Dashboard
+</header>
+
+
+
+<div class="container">
+
+
+<div class="menu">
+
+<a href="index.html">Home</a>
+
+<a href="deposit.html">Deposit</a>
+
+<a href="withdraw.html">Withdrawal</a>
+
+<a href="login.html">Logout</a>
+
+</div>
+
+
+
+<div class="notice">
+
+Welcome to your ReferPro account dashboard.
+
+</div>
+
+
+
+<div class="cards">
+
+
+<div class="card">
+
+<h2>Profile</h2>
+
+<p>Name: User</p>
+
+<p>Status: Active</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>Wallet</h2>
+
+<div class="amount">
+Rs. 0
+</div>
+
+<p>Available Balance</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>Deposit</h2>
+
+<p>Package Amount</p>
+
+<div class="amount">
+Rs. 500
+</div>
+
+<a href="deposit.html">
+
+<button>
+Make Deposit
+</button>
+
+</a>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>Referral</h2>
+
+<p>Total Referrals</p>
+
+<div class="amount">
+0
+</div>
+
+<a href="referral.html">
+
+<button>
+View Team
+</button>
+
+</a>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>Level</h2>
+
+<p>
+Current Level
+</p>
+
+<div class="amount">
+Level 1
+</div>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>Withdrawal</h2>
+
+<p>
+Request your withdrawal
+</p>
+
+<a href="withdraw.html">
+
+<button>
+Withdraw
+</button>
+
+</a>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="footer">
+
+<p>
+ReferPro Dashboard
+</p>
+
+</div>
+
+
+</body>
+</html>

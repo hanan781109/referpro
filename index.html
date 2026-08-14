@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ReferPro — Referral Dashboard Demo</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f8fc;color:#142033}
+header{background:#fff;padding:18px 6%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ddd}
+.logo{font-size:25px;font-weight:800}
+.r{color:#e53935}.b{color:#2563eb}.g{color:#16a34a}
+nav a{margin-left:20px;text-decoration:none;color:#44546a}
+.btn{padding:12px 18px;border:0;border-radius:10px;color:white;font-weight:bold;cursor:pointer}
+.blue{background:#2563eb}.green{background:#16a34a}.red{background:#e53935}
+.hero{padding:80px 7%;background:linear-gradient(120deg,#fff,#eef5ff,#effff4)}
+.hero h1{font-size:52px;max-width:700px;margin:10px 0}
+.hero h1 span{color:#16a34a}
+.hero p{font-size:18px;color:#607086;max-width:650px}
+.section{padding:65px 7%}
+.section h2{font-size:34px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:white;border:1px solid #e1e8f0;border-radius:18px;padding:24px;box-shadow:0 8px 30px #1420330d}
+.levels{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.level{background:white;padding:20px;border-radius:15px;border-top:5px solid #2563eb}
+.level strong{font-size:25px;display:block;margin:8px 0}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stat{background:white;padding:20px;border-radius:15px;text-align:center}
+.stat strong{font-size:25px;display:block}
+.notice{padding:18px;background:#fff8df;border:1px solid #ecd991;border-radius:12px}
+footer{background:#101a2a;color:#ccd5e1;padding:40px 7%}
+small{color:#718096}
+@media(max-width:800px){
+.hero h1{font-size:38px}.grid,.levels,.stats{grid-template-columns:1fr}
+nav{display:none}.section{padding:45px 5%}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo"><span class="r">R</span><span class="b">efer</span><span class="g">Pro</span></div>
+<nav>
+<a href="#rewards">Rewards</a>
+<a href="#team">Team</a>
+<a href="#withdraw">Withdrawals</a>
+</nav>
+</header>
+
+<section class="hero">
+<h1>Invite. Grow your team. <span>Track your rewards.</span></h1>
+<p>
+A modern referral-dashboard concept with direct referrals,
+team activity and daily task tracking.
+</p>
+<button class="btn green" onclick="alert('Demo only — account creation is disabled.')">
+Create Account
+</button>
+</section>
+
+<section class="section">
+<h2>Dashboard Preview</h2>
+<div class="stats">
+<div class="stat"><strong>18</strong><small>Referrals</small></div>
+<div class="stat"><strong>Rs. 864</strong><small>Ad Rewards</small></div>
+<div class="stat"><strong>Rs. 1,840</strong><small>Demo Balance</small></div>
+<div class="stat"><strong>Level 2</strong><small>Current Level</small></div>
+</div>
+</section>
+
+<section id="rewards" class="section">
+<h2>5 Referral Levels</h2>
+<div class="levels">
+
+<div class="level">
+<b>Level 1</b>
+<strong>Rs. 150</strong>
+<small>Unlock: 5 referrals</small>
+</div>
+
+<div class="level">
+<b>Level 2</b>
+<strong>Rs. 180</strong>
+<small>Unlock: 12 referrals</small>
+</div>
+
+<div class="level">
+<b>Level 3</b>
+<strong>Rs. 250</strong>
+<small>Unlock: 20 referrals</small>
+</div>
+
+<div class="level">
+<b>Level 4</b>
+<strong>Rs. 280</strong>
+<small>Unlock: 35 referrals</small>
+</div>
+
+<div class="level">
+<b>Level 5</b>
+<strong>Rs. 350</strong>
+<small>Unlock: 50 referrals</small>
+</div>
+
+</div>
+</section>
+
+<section class="section">
+<h2>Daily Tasks</h2>
+<div class="grid">
+<div class="card">
+<h3>Daily Ad Tasks</h3>
+<p>3 task slots per day.</p>
+<p><b>Configured demo value:</b> Rs. 8 per task.</p>
+<button class="btn blue" onclick="alert('Demo task — no real reward is issued.')">
+View Task
+</button>
+</div>
+
+<div class="card">
+<h3>Direct Earnings</h3>
+<p>Referral rewards are displayed separately from other dashboard activity.</p>
+</div>
+
+<div class="card">
+<h3>Team Earnings</h3>
+<p>Team activity can be tracked by multiple referral levels.</p>
+</div>
+</div>
+</section>
+
+<section id="team" class="section">
+<h2>Team Structure</h2>
+<div class="card">
+<p>Team Level 1 — 5% example commission</p>
+<p>Team Level 2 — 3% example commission</p>
+<p>Team Level 3 — 2% example commission</p>
+<p>Team Level 4 — 1% example commission</p>
+<p>Team Level 5 — 1% example commission</p>
+</div>
+</section>
+
+<section id="withdraw" class="section">
+<h2>Withdrawal Preview</h2>
+<div class="grid">
+<div class="card">
+<h3>Available Methods</h3>
+<p>• Easypaisa</p>
+<p>• JazzCash</p>
+<p><b>Minimum:</b> Rs. 200</p>
+<p><b>Maximum:</b> Rs. 7,000</p>
+</div>
+
+<div class="card">
+<h3>Verification</h3>
+<label>Sender Number</label>
+<input style="width:100%;padding:12px" placeholder="03XXXXXXXXX">
+<br><br>
+<label>TRX ID</label>
+<input style="width:100%;padding:12px" placeholder="Transaction ID">
+<br><br>
+<button class="btn blue" onclick="alert('Demo only — no payment is processed.')">
+Submit
+</button>
+</div>
+</div>
+</section>
+
+<section class="section">
+<div class="notice">
+<b>Important:</b> This is a demonstration interface. Earnings shown on this page
+are examples and are not guaranteed. Do not send money through this demo.
+A production financial/referral service requires appropriate legal,
+regulatory, payment-provider, privacy and fraud-prevention review.
+</div>
+</section>
+
+<footer>
+<h2>ReferPro</h2>
+<p>Referral dashboard demonstration.</p>
+<small>© 2026 ReferPro — Demo interface only.</small>
+</footer>
+
+</body>
+</html>

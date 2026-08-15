@@ -5,103 +5,114 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ReferPro Admin Panel</title>
+<title>ReferPro - Admin Login</title>
 
 <style>
+
+*{
+    box-sizing:border-box;
+}
 
 body{
     margin:0;
     font-family:Arial,sans-serif;
     background:#f3f6fb;
-}
-
-header{
-    background:#111827;
-    color:white;
-    padding:18px;
-    text-align:center;
-    font-size:25px;
-    font-weight:bold;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
 .container{
-    max-width:1000px;
-    margin:30px auto;
+    width:100%;
+    max-width:420px;
     padding:20px;
 }
 
 .card{
     background:white;
-    padding:25px;
-    border-radius:15px;
+    padding:30px;
+    border-radius:16px;
     box-shadow:0 5px 20px #0002;
-    margin-bottom:20px;
+}
+
+.logo{
+    text-align:center;
+    font-size:30px;
+    font-weight:bold;
+    color:#111827;
+    margin-bottom:8px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#666;
+    margin-bottom:30px;
 }
 
 h2{
+    text-align:center;
     color:#2563eb;
     margin-top:0;
 }
 
-.stats{
-    display:flex;
-    gap:15px;
-    flex-wrap:wrap;
-}
-
-.stat{
-    flex:1;
-    min-width:180px;
-    background:#f8fafc;
-    padding:20px;
-    border-radius:12px;
-    text-align:center;
-}
-
-.stat h3{
-    margin:0;
-    color:#64748b;
-}
-
-.stat p{
-    font-size:30px;
-    font-weight:bold;
-    color:#2563eb;
-    margin:10px 0 0;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-th,td{
-    padding:12px;
-    border-bottom:1px solid #ddd;
-    text-align:left;
-}
-
-th{
-    background:#f8fafc;
-}
-
-.logout{
-    background:#dc2626;
+label{
+    display:block;
     margin-top:15px;
+    margin-bottom:6px;
+    font-weight:bold;
 }
 
-.logout:hover{
-    background:#b91c1c;
+input{
+    width:100%;
+    padding:13px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:15px;
 }
 
-.loading{
-    text-align:center;
-    padding:20px;
-    color:#666;
+input:focus{
+    outline:none;
+    border-color:#2563eb;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    margin-top:25px;
+    background:#2563eb;
+    color:white;
+    border:0;
+    border-radius:8px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#16a34a;
+}
+
+button:disabled{
+    background:#999;
+    cursor:not-allowed;
 }
 
 .error{
-    color:#dc2626;
+    display:none;
+    margin-top:15px;
+    padding:12px;
+    background:#fee2e2;
+    color:#b91c1c;
+    border-radius:8px;
+    font-size:14px;
+}
+
+.footer{
+    text-align:center;
+    color:#777;
+    margin-top:20px;
+    font-size:13px;
 }
 
 </style>
@@ -110,53 +121,63 @@ th{
 
 <body>
 
-<header>
-ReferPro Admin Panel
-</header>
-
-
 <div class="container">
 
-
 <div class="card">
 
-<h2>Admin Dashboard</h2>
-
-<div class="stats">
-
-<div class="stat">
-<h3>Total Users</h3>
-<p id="totalUsers">0</p>
+<div class="logo">
+ReferPro
 </div>
 
-<div class="stat">
-<h3>Total Admins</h3>
-<p id="totalAdmins">0</p>
-</div>
+<p class="subtitle">
+Admin Panel Login
+</p>
 
-</div>
+<h2>Login</h2>
 
-<button class="logout" id="logoutButton">
-Logout
+
+<form id="loginForm">
+
+<label for="email">
+Email
+</label>
+
+<input
+    type="email"
+    id="email"
+    placeholder="Enter admin email"
+    required
+>
+
+
+<label for="password">
+Password
+</label>
+
+<input
+    type="password"
+    id="password"
+    placeholder="Enter password"
+    required
+>
+
+
+<button type="submit" id="loginButton">
+Login
 </button>
 
-</div>
+<div id="errorMessage" class="error"></div>
+
+</form>
 
 
-
-<div class="card">
-
-<h2>Registered Users</h2>
-
-<div id="usersArea" class="loading">
-Loading users...
+<div class="footer">
+© 2026 ReferPro. All rights reserved.
 </div>
 
 </div>
 
-
 </div>
-
 
 
 <script type="module">
@@ -169,18 +190,11 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
     getAuth,
+    signInWithEmailAndPassword,
     onAuthStateChanged,
     signOut
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-
-import {
-    getDatabase,
-    ref,
-    get
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
 const firebaseConfig = {
@@ -213,9 +227,6 @@ const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
 
-const db = getDatabase(app);
-
-
 
 /*
 ADMIN UID
@@ -225,142 +236,128 @@ const ADMIN_UID =
 "WK9SL4msIHWZR4zelvWM9Wko2fl2";
 
 
+const form =
+document.getElementById("loginForm");
+
+const loginButton =
+document.getElementById("loginButton");
+
+const errorMessage =
+document.getElementById("errorMessage");
+
 
 /*
-CHECK LOGIN
+SHOW ERROR
+*/
+
+function showError(message){
+
+    errorMessage.innerText = message;
+
+    errorMessage.style.display = "block";
+
+}
+
+
+/*
+CHECK EXISTING LOGIN
 */
 
 onAuthStateChanged(auth, async (user) => {
 
     if(!user){
+        return;
+    }
 
-        window.location.href =
-        "login.html";
+
+    if(user.uid === ADMIN_UID){
+
+        window.location.replace("admin.html");
 
         return;
 
     }
 
 
-    if(user.uid !== ADMIN_UID){
+    /*
+    Logged-in user is NOT admin
+    */
 
-        alert("Access denied. Admin only.");
-
-        await signOut(auth);
-
-        window.location.href =
-        "login.html";
-
-        return;
-
-    }
-
-
-    loadUsers();
+    await signOut(auth);
 
 });
 
 
-
 /*
-LOAD USERS
+LOGIN
 */
 
-async function loadUsers(){
+form.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+
+    errorMessage.style.display = "none";
+
+
+    const email =
+    document.getElementById("email")
+    .value
+    .trim();
+
+
+    const password =
+    document.getElementById("password")
+    .value;
+
+
+    loginButton.disabled = true;
+
+    loginButton.innerText =
+    "Logging in...";
+
 
     try{
 
-        const snapshot =
-        await get(ref(db,"users"));
+        const userCredential =
+        await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
 
-        const usersArea =
-        document.getElementById("usersArea");
+
+        const user =
+        userCredential.user;
 
 
-        if(!snapshot.exists()){
+        /*
+        CHECK ADMIN UID
+        */
 
-            usersArea.innerHTML =
-            "No users found.";
+        if(user.uid !== ADMIN_UID){
+
+            await signOut(auth);
+
+            showError(
+                "Access denied. This account is not an admin account."
+            );
+
+            loginButton.disabled = false;
+
+            loginButton.innerText =
+            "Login";
 
             return;
 
         }
 
 
-        const users =
-        snapshot.val();
+        /*
+        ADMIN LOGIN SUCCESS
+        */
 
-
-        let html = `
-
-        <table>
-
-        <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Referral Code</th>
-        <th>Joined With</th>
-        </tr>
-
-        `;
-
-
-        let count = 0;
-
-
-        for(const uid in users){
-
-            const user =
-            users[uid];
-
-            count++;
-
-
-            html += `
-
-            <tr>
-
-            <td>
-            ${user.name || "-"}
-            </td>
-
-            <td>
-            ${user.email || "-"}
-            </td>
-
-            <td>
-            ${user.phone || "-"}
-            </td>
-
-            <td>
-            ${user.referralCode || "-"}
-            </td>
-
-            <td>
-            ${user.joinedWith || "-"}
-            </td>
-
-            </tr>
-
-            `;
-
-        }
-
-
-        html += "</table>";
-
-
-        usersArea.innerHTML =
-        html;
-
-
-        document.getElementById("totalUsers")
-        .innerText = count;
-
-
-        document.getElementById("totalAdmins")
-        .innerText = "1";
+        window.location.replace("admin.html");
 
 
     }
@@ -368,35 +365,60 @@ async function loadUsers(){
 
         console.error(error);
 
-        document.getElementById("usersArea")
-        .innerHTML =
-        '<p class="error">Unable to load users: ' +
-        error.message +
-        '</p>';
+
+        let message =
+        "Login failed. Please check your email and password.";
+
+
+        if(error.code === "auth/invalid-credential"){
+
+            message =
+            "Incorrect email or password.";
+
+        }
+
+        else if(error.code === "auth/user-not-found"){
+
+            message =
+            "No account found with this email.";
+
+        }
+
+        else if(error.code === "auth/wrong-password"){
+
+            message =
+            "Incorrect password.";
+
+        }
+
+        else if(error.code === "auth/invalid-email"){
+
+            message =
+            "Please enter a valid email.";
+
+        }
+
+        else if(error.code === "auth/too-many-requests"){
+
+            message =
+            "Too many attempts. Please try again later.";
+
+        }
+
+
+        showError(message);
+
+
+        loginButton.disabled = false;
+
+        loginButton.innerText =
+        "Login";
 
     }
-
-}
-
-
-
-/*
-LOGOUT
-*/
-
-document
-.getElementById("logoutButton")
-.addEventListener("click", async () => {
-
-    await signOut(auth);
-
-    window.location.href =
-    "login.html";
 
 });
 
 </script>
-
 
 </body>
 </html>

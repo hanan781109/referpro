@@ -17,7 +17,6 @@ body{
     margin:0;
     font-family:Arial,sans-serif;
     background:#f3f6fb;
-    min-height:100vh;
 }
 
 header{
@@ -45,13 +44,11 @@ header{
 h2{
     text-align:center;
     color:#2563eb;
-    margin-top:0;
 }
 
 .subtitle{
     text-align:center;
     color:#666;
-    margin-bottom:25px;
 }
 
 label{
@@ -66,12 +63,6 @@ input{
     padding:13px;
     border:1px solid #ccc;
     border-radius:8px;
-    font-size:15px;
-}
-
-input:focus{
-    outline:none;
-    border-color:#2563eb;
 }
 
 button{
@@ -82,18 +73,13 @@ button{
     color:white;
     border:0;
     border-radius:8px;
+    cursor:pointer;
     font-size:16px;
     font-weight:bold;
-    cursor:pointer;
 }
 
 button:hover{
     background:#16a34a;
-}
-
-button:disabled{
-    background:#999;
-    cursor:not-allowed;
 }
 
 .login{
@@ -103,25 +89,25 @@ button:disabled{
 
 .login a{
     color:#2563eb;
-    text-decoration:none;
     font-weight:bold;
 }
 
-.footer{
+#message{
+    margin-top:15px;
     text-align:center;
-    color:#777;
-    margin-top:25px;
-    font-size:14px;
+    font-weight:bold;
 }
 
 </style>
 
 </head>
 
+
 <body>
 
+
 <header>
-    ReferPro
+ReferPro
 </header>
 
 
@@ -129,75 +115,94 @@ button:disabled{
 
 <div class="card">
 
+
 <h2>Create Account</h2>
 
+
 <p class="subtitle">
-Join ReferPro and start building your referral team.
+Join ReferPro and build your referral team.
 </p>
+
 
 
 <form id="registerForm">
 
-<label>Full Name</label>
+
+<label>
+Full Name
+</label>
 
 <input
-    type="text"
-    id="name"
-    placeholder="Enter your name"
-    required
+type="text"
+id="name"
+required
 >
 
 
-<label>Email</label>
+
+<label>
+Email
+</label>
 
 <input
-    type="email"
-    id="email"
-    placeholder="Enter your email"
-    required
+type="email"
+id="email"
+required
 >
 
 
-<label>Phone</label>
+
+<label>
+Phone
+</label>
 
 <input
-    type="tel"
-    id="phone"
-    placeholder="Enter your phone number"
-    required
+type="tel"
+id="phone"
+required
 >
 
 
-<label>Password</label>
+
+<label>
+Password
+</label>
 
 <input
-    type="password"
-    id="password"
-    placeholder="Create password"
-    minlength="6"
-    required
+type="password"
+id="password"
+minlength="6"
+required
 >
 
 
-<label>Referral Code</label>
+
+<label>
+Referral Code (Optional)
+</label>
 
 <input
-    type="text"
-    id="referral"
-    placeholder="Enter referral code (optional)"
+type="text"
+id="referral"
 >
 
 
-<button type="submit" id="registerButton">
-    Create Account
+
+<button type="submit" id="btn">
+Create Account
 </button>
+
+
+<div id="message"></div>
+
 
 </form>
 
 
+
 <div class="login">
 
-Already have an account?
+Already have account?
 
 <a href="login.html">
 Login
@@ -205,113 +210,246 @@ Login
 
 </div>
 
-</div>
 
-
-<div class="footer">
-    © 2026 ReferPro. All rights reserved.
 </div>
 
 </div>
+
 
 
 <script type="module">
 
+
 import { initializeApp }
+
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-import {
-    getAuth,
-    createUserWithEmailAndPassword
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
-    getDatabase,
-    ref,
-    set
+
+getAuth,
+
+createUserWithEmailAndPassword
+
 }
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+import {
+
+getDatabase,
+
+ref,
+
+set
+
+}
+
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
 
 
 const firebaseConfig = {
 
-    apiKey: "AIzaSyB2MHb9flfcWipUxDM6hF3Hgvy9ZsBHV0g",
 
-    authDomain: "referpro-65d27.firebaseapp.com",
+apiKey:
+"AIzaSyB2MHb9flfcWipUxDM6hF3Hgvy9ZsBHV0g",
 
-    databaseURL:
-    "https://referpro-65d27-default-rtdb.firebaseio.com",
 
-    projectId: "referpro-65d27",
+authDomain:
+"referpro-65d27.firebaseapp.com",
 
-    storageBucket:
-    "referpro-65d27.firebasestorage.app",
 
-    messagingSenderId: "257409426857",
+databaseURL:
+"https://referpro-65d27-default-rtdb.firebaseio.com",
 
-    appId:
-    "1:257409426857:web:8cfcdf79eab219d6f890b8"
+
+projectId:
+"referpro-65d27",
+
+
+storageBucket:
+"referpro-65d27.firebasestorage.app",
+
+
+messagingSenderId:
+"257409426857",
+
+
+appId:
+"1:257409426857:web:8cfcdf79eab219d6f890b8"
 
 };
 
 
+
 const app = initializeApp(firebaseConfig);
 
+
 const auth = getAuth(app);
+
 
 const db = getDatabase(app);
 
 
-const form = document.getElementById("registerForm");
 
-const button = document.getElementById("registerButton");
-
-
-form.addEventListener("submit", async function(e){
-
-    e.preventDefault();
+const form =
+document.getElementById("registerForm");
 
 
-    const name =
-    document.getElementById("name").value.trim();
-
-    const email =
-    document.getElementById("email").value.trim();
-
-    const phone =
-    document.getElementById("phone").value.trim();
-
-    const password =
-    document.getElementById("password").value;
-
-    const referral =
-    document.getElementById("referral").value.trim();
+const btn =
+document.getElementById("btn");
 
 
-    button.disabled = true;
-
-    button.innerText = "Creating Account...";
-
-
-    try{
+const message =
+document.getElementById("message");
 
 
-        const userCredential =
-        await createUserWithEmailAndPassword(
-            auth,
-            email,
-            password
-        );
+
+form.addEventListener("submit", async(e)=>{
 
 
-        const uid =
-        userCredential.user.uid;
+e.preventDefault();
 
 
-        const myCode =
-        "REF" +
-        uid.substring(0,6).toUpperCase();
+
+const name =
+document.getElementById("name").value.trim();
 
 
-        await
+const email =
+document.getElementById("email").value.trim();
+
+
+const phone =
+document.getElementById("phone").value.trim();
+
+
+const password =
+document.getElementById("password").value;
+
+
+const referral =
+document.getElementById("referral").value.trim();
+
+
+
+btn.disabled=true;
+
+btn.innerText="Creating...";
+
+
+
+try{
+
+
+const userCredential =
+
+await createUserWithEmailAndPassword(
+
+auth,
+
+email,
+
+password
+
+);
+
+
+
+const uid =
+userCredential.user.uid;
+
+
+
+const myCode =
+
+"REF" +
+
+uid.substring(0,6).toUpperCase();
+
+
+
+
+
+await set(
+
+ref(db,"users/"+uid),
+
+{
+
+
+uid:uid,
+
+name:name,
+
+email:email,
+
+phone:phone,
+
+referralCode:myCode,
+
+joinedWith: referral || "Direct",
+
+wallet:0,
+
+status:"Active",
+
+createdAt:Date.now()
+
+
+}
+
+);
+
+
+
+
+message.style.color="green";
+
+message.innerText=
+"Account created successfully!";
+
+
+
+setTimeout(()=>{
+
+window.location.href="login.html";
+
+},1500);
+
+
+
+}
+
+
+catch(error){
+
+
+console.log(error);
+
+
+message.style.color="red";
+
+message.innerText=
+error.message;
+
+
+btn.disabled=false;
+
+btn.innerText="Create Account";
+
+
+}
+
+
+
+});
+
+
+</script>
+
+
+</body>
+</html>

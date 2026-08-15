@@ -2,7 +2,7 @@
 <html>
 <head>
 
-<title>ReferPro Admin</title>
+<title>ReferPro Admin Panel</title>
 
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
@@ -22,7 +22,7 @@ text-align:center;
 font-size:25px;
 }
 
-.box{
+.card{
 background:white;
 margin:20px;
 padding:20px;
@@ -33,11 +33,10 @@ box-shadow:0 5px 15px #0002;
 button{
 padding:8px 12px;
 border:0;
-border-radius:7px;
+border-radius:6px;
 background:green;
 color:white;
 cursor:pointer;
-margin:3px;
 }
 
 .red{
@@ -58,6 +57,7 @@ border-bottom:1px solid #ddd;
 
 </head>
 
+
 <body>
 
 
@@ -66,7 +66,7 @@ ReferPro Admin Panel
 </header>
 
 
-<div class="box">
+<div class="card">
 
 <button id="logout">
 Logout
@@ -75,13 +75,23 @@ Logout
 </div>
 
 
-<div class="box">
 
-<h2>Deposits</h2>
+<div class="card">
+
+<h2>Pending Deposits</h2>
 
 <table>
 
-<tbody id="depositList"></tbody>
+<thead>
+<tr>
+<th>Name</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="deposits"></tbody>
 
 </table>
 
@@ -89,13 +99,22 @@ Logout
 
 
 
-<div class="box">
+<div class="card">
 
-<h2>Withdrawals</h2>
+<h2>Pending Withdrawals</h2>
 
 <table>
 
-<tbody id="withdrawList"></tbody>
+<thead>
+<tr>
+<th>Name</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="withdrawals"></tbody>
 
 </table>
 
@@ -129,6 +148,7 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
 
+
 const firebaseConfig={
 
 apiKey:"AIzaSyB2MHb9flfcWipUxDM6hF3Hgvy9ZsBHV0g",
@@ -156,7 +176,10 @@ const auth=getAuth(app);
 const db=getDatabase(app);
 
 
-const adminEmail="hananjanweribro@gmail.com";
+
+const ADMIN_EMAIL="hananjanweribro@gmail.com";
+
+
 
 
 
@@ -171,9 +194,9 @@ return;
 }
 
 
-if(user.email!==adminEmail){
+if(user.email!==ADMIN_EMAIL){
 
-alert("You are not admin");
+alert("Not Admin");
 
 location="user-login.html";
 
@@ -205,7 +228,6 @@ location="login.html";
 
 
 
-
 async function loadDeposits(){
 
 
@@ -217,6 +239,7 @@ let html="";
 
 for(let id in data){
 
+
 let d=data[id];
 
 
@@ -224,11 +247,11 @@ html+=`
 
 <tr>
 
-<td>${d.name}</td>
+<td>${d.name||""}</td>
 
-<td>Rs ${d.amount}</td>
+<td>${d.amount||0}</td>
 
-<td>${d.status}</td>
+<td>${d.status||"pending"}</td>
 
 <td>
 
@@ -250,7 +273,7 @@ Reject
 }
 
 
-depositList.innerHTML=html;
+deposits.innerHTML=html;
 
 
 }
@@ -262,9 +285,6 @@ depositList.innerHTML=html;
 window.approveDeposit=async(id)=>{
 
 
-let d=(await get(ref(db,"deposits/"+id))).val();
-
-
 await update(ref(db,"deposits/"+id),{
 
 status:"approved"
@@ -272,24 +292,12 @@ status:"approved"
 });
 
 
-let u=(await get(ref(db,"users/"+d.uid))).val()||{};
-
-
-
-await update(ref(db,"users/"+d.uid),{
-
-wallet:Number(u.wallet||0)+50
-
-});
-
-
-alert("Deposit Approved +50");
+alert("Deposit Approved");
 
 loadDeposits();
 
 
 };
-
 
 
 
@@ -307,9 +315,8 @@ status:"rejected"
 
 loadDeposits();
 
+
 };
-
-
 
 
 
@@ -334,12 +341,11 @@ html+=`
 
 <tr>
 
-<td>${w.name}</td>
+<td>${w.name||""}</td>
 
-<td>Rs ${w.amount}</td>
+<td>${w.amount||0}</td>
 
-<td>${w.status}</td>
-
+<td>${w.status||"pending"}</td>
 
 <td>
 
@@ -347,14 +353,11 @@ html+=`
 Approve
 </button>
 
-
 <button class="red" onclick="rejectWithdraw('${id}')">
 Reject
 </button>
 
-
 </td>
-
 
 </tr>
 
@@ -363,45 +366,16 @@ Reject
 }
 
 
-withdrawList.innerHTML=html;
+withdrawals.innerHTML=html;
 
 
 }
-
 
 
 
 
 
 window.approveWithdraw=async(id)=>{
-
-
-let w=(await get(ref(db,"withdrawals/"+id))).val();
-
-
-let u=(await get(ref(db,"users/"+w.uid))).val()||{};
-
-
-let wallet=Number(u.wallet||0);
-
-
-let amount=Number(w.amount||0);
-
-
-if(wallet<amount){
-
-alert("Low wallet");
-
-return;
-
-}
-
-
-await update(ref(db,"users/"+w.uid),{
-
-wallet:wallet-amount
-
-});
 
 
 await update(ref(db,"withdrawals/"+id),{
@@ -411,13 +385,10 @@ status:"approved"
 });
 
 
-alert("Withdrawal Approved");
-
 loadWithdrawals();
 
 
 };
-
 
 
 
@@ -437,6 +408,7 @@ loadWithdrawals();
 
 
 };
+
 
 
 </script>

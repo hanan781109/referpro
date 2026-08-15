@@ -2,9 +2,9 @@
 <html>
 <head>
 
-<title>ReferPro Admin Panel</title>
+<title>ReferPro Admin</title>
 
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 
@@ -22,12 +22,23 @@ text-align:center;
 font-size:25px;
 }
 
-.card{
+.box{
 background:white;
 margin:20px;
 padding:20px;
 border-radius:15px;
-box-shadow:0 5px 15px #0002;
+}
+
+button{
+padding:8px 12px;
+border:0;
+border-radius:6px;
+background:green;
+color:white;
+}
+
+.red{
+background:red;
 }
 
 table{
@@ -35,51 +46,39 @@ width:100%;
 border-collapse:collapse;
 }
 
-th,td{
+td,th{
 padding:10px;
 border-bottom:1px solid #ddd;
-}
-
-button{
-padding:8px 12px;
-border:0;
-border-radius:6px;
-background:#16a34a;
-color:white;
-cursor:pointer;
-}
-
-.reject{
-background:#dc2626;
 }
 
 </style>
 
 </head>
 
-
 <body>
-
 
 <header>
 ReferPro Admin Panel
 </header>
 
 
-<div class="card">
+<div class="box">
+
+<button id="logout">
+Logout
+</button>
+
+</div>
+
+
+
+<div class="box">
 
 <h2>Deposits</h2>
 
 <table>
 
-<tr>
-<th>Name</th>
-<th>Amount</th>
-<th>Status</th>
-<th>Action</th>
-</tr>
-
-<tbody id="deposits"></tbody>
+<tbody id="depositList"></tbody>
 
 </table>
 
@@ -88,24 +87,18 @@ ReferPro Admin Panel
 
 
 
-<div class="card">
+<div class="box">
 
 <h2>Withdrawals</h2>
 
 <table>
 
-<tr>
-<th>Name</th>
-<th>Amount</th>
-<th>Status</th>
-<th>Action</th>
-</tr>
-
-<tbody id="withdrawals"></tbody>
+<tbody id="withdrawList"></tbody>
 
 </table>
 
 </div>
+
 
 
 
@@ -113,36 +106,28 @@ ReferPro Admin Panel
 
 
 import {initializeApp}
-
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 
 import {
-
 getAuth,
-onAuthStateChanged
-
+onAuthStateChanged,
+signOut
 }
-
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 import {
-
 getDatabase,
 ref,
 get,
 update
-
 }
-
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
 
-
 const firebaseConfig={
-
 
 apiKey:"AIzaSyB2MHb9flfcWipUxDM6hF3Hgvy9ZsBHV0g",
 
@@ -184,22 +169,20 @@ return;
 }
 
 
-
-let admin =
-await get(ref(db,"admins/"+user.uid));
-
+let admin=await get(
+ref(db,"admins/"+user.uid)
+);
 
 
 if(admin.val()!=true){
 
-alert("Not Admin");
+alert("You are not admin");
 
 location="user-login.html";
 
 return;
 
 }
-
 
 
 loadDeposits();
@@ -209,6 +192,17 @@ loadWithdrawals();
 
 });
 
+
+
+
+
+logout.onclick=()=>{
+
+signOut(auth);
+
+location="login.html";
+
+};
 
 
 
@@ -239,32 +233,28 @@ html+=`
 
 <td>${d.status}</td>
 
-
 <td>
-
 
 <button onclick="approveDeposit('${id}')">
 Approve
 </button>
 
 
-<button class="reject" onclick="rejectDeposit('${id}')">
+<button class="red" onclick="rejectDeposit('${id}')">
 Reject
 </button>
 
 
 </td>
 
-
 </tr>
-
 
 `;
 
 }
 
 
-document.getElementById("deposits").innerHTML=html;
+depositList.innerHTML=html;
 
 
 }
@@ -277,7 +267,7 @@ document.getElementById("deposits").innerHTML=html;
 window.approveDeposit=async(id)=>{
 
 
-let dep=(await get(ref(db,"deposits/"+id))).val();
+let d=(await get(ref(db,"deposits/"+id))).val();
 
 
 await update(ref(db,"deposits/"+id),{
@@ -287,17 +277,15 @@ status:"approved"
 });
 
 
-
-let user=(await get(ref(db,"users/"+dep.uid))).val()||{};
-
+let u=(await get(ref(db,"users/"+d.uid))).val()||{};
 
 
-if(user.depositBonusGiven!=true){
+if(u.depositBonusGiven!=true){
 
 
-await update(ref(db,"users/"+dep.uid),{
+await update(ref(db,"users/"+d.uid),{
 
-wallet:Number(user.wallet||0)+50,
+wallet:Number(u.wallet||0)+50,
 
 depositBonusGiven:true
 
@@ -307,14 +295,12 @@ depositBonusGiven:true
 }
 
 
-
-alert("Deposit Approved +50");
+alert("Deposit Approved");
 
 loadDeposits();
 
 
 }
-
 
 
 
@@ -365,16 +351,14 @@ html+=`
 
 <td>${w.status}</td>
 
-
 <td>
-
 
 <button onclick="approveWithdraw('${id}')">
 Approve
 </button>
 
 
-<button class="reject" onclick="rejectWithdraw('${id}')">
+<button class="red" onclick="rejectWithdraw('${id}')">
 Reject
 </button>
 
@@ -388,12 +372,10 @@ Reject
 }
 
 
-
-document.getElementById("withdrawals").innerHTML=html;
+withdrawList.innerHTML=html;
 
 
 }
-
 
 
 
@@ -405,24 +387,23 @@ window.approveWithdraw=async(id)=>{
 let w=(await get(ref(db,"withdrawals/"+id))).val();
 
 
-let user=(await get(ref(db,"users/"+w.uid))).val()||{};
+let u=(await get(ref(db,"users/"+w.uid))).val()||{};
 
 
-let wallet=Number(user.wallet||0);
+let wallet=Number(u.wallet||0);
 
 
 let amount=Number(w.amount||0);
 
 
 
-if(wallet < amount){
+if(wallet<amount){
 
-alert("Low Wallet Balance");
+alert("Low wallet");
 
 return;
 
 }
-
 
 
 await update(ref(db,"users/"+w.uid),{
@@ -441,7 +422,6 @@ status:"approved"
 
 
 alert("Withdrawal Approved");
-
 
 loadWithdrawals();
 

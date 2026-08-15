@@ -1,75 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>ReferPro User Login</title>
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
 
 body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#f3f6fb;
+font-family:Arial;
+background:#f3f6fb;
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+margin:0;
 }
 
-header{
-    background:#111827;
-    color:white;
-    padding:20px;
-    text-align:center;
-    font-size:26px;
-    font-weight:bold;
-}
-
-.container{
-    max-width:400px;
-    margin:50px auto;
-    background:white;
-    padding:30px;
-    border-radius:15px;
-    box-shadow:0 5px 20px #0002;
+.card{
+background:white;
+width:350px;
+padding:30px;
+border-radius:15px;
+box-shadow:0 5px 20px #0002;
 }
 
 h2{
-    text-align:center;
-    color:#2563eb;
+text-align:center;
+color:#2563eb;
 }
 
 input{
-    width:100%;
-    padding:13px;
-    margin:10px 0;
-    border:1px solid #ccc;
-    border-radius:8px;
+width:100%;
+padding:12px;
+margin-top:12px;
+border:1px solid #ccc;
+border-radius:8px;
 }
 
 button{
-    width:100%;
-    padding:13px;
-    margin-top:15px;
-    background:#2563eb;
-    color:white;
-    border:0;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:16px;
+width:100%;
+padding:13px;
+margin-top:20px;
+background:#2563eb;
+color:white;
+border:0;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
 }
 
 button:hover{
-    background:#16a34a;
+background:#16a34a;
 }
 
-#message{
-    text-align:center;
-    margin-top:15px;
-    font-weight:bold;
+#error{
+color:red;
+text-align:center;
+margin-top:15px;
 }
 
 a{
-    color:#2563eb;
+display:block;
+text-align:center;
+margin-top:15px;
 }
 
 </style>
@@ -79,26 +75,25 @@ a{
 
 <body>
 
-<header>
-ReferPro
-</header>
+
+<div class="card">
 
 
-<div class="container">
-
-<h2>User Login</h2>
+<h2>
+ReferPro Login
+</h2>
 
 
 <input 
 type="email"
 id="email"
-placeholder="Enter email">
+placeholder="Enter Email">
 
 
-<input 
+<input
 type="password"
 id="password"
-placeholder="Enter password">
+placeholder="Enter Password">
 
 
 
@@ -107,18 +102,17 @@ Login
 </button>
 
 
-<div id="message"></div>
+<div id="error"></div>
 
 
-<p style="text-align:center">
-New user?
+
 <a href="register.html">
-Create Account
+Create New Account
 </a>
-</p>
 
 
 </div>
+
 
 
 
@@ -127,14 +121,20 @@ Create Account
 
 
 import {initializeApp}
+
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 
 import {
+
 getAuth,
 signInWithEmailAndPassword
+
 }
+
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
 
 
 
@@ -159,22 +159,27 @@ appId:"1:257409426857:web:8cfcdf79eab219d6f890b8"
 
 
 
+
 const app=initializeApp(firebaseConfig);
 
 const auth=getAuth(app);
 
 
 
-document
-.getElementById("loginBtn")
-.addEventListener("click",async()=>{
+
+const ADMIN_EMAIL="hananjanweribro@gmail.com";
 
 
-const email=
+
+
+loginBtn.onclick=async()=>{
+
+
+let email=
 document.getElementById("email").value.trim();
 
 
-const password=
+let password=
 document.getElementById("password").value;
 
 
@@ -182,46 +187,62 @@ document.getElementById("password").value;
 try{
 
 
+let result=
+
 await signInWithEmailAndPassword(
+
 auth,
 email,
 password
+
 );
 
 
 
-document.getElementById("message").style.color="green";
-
-document.getElementById("message").innerText=
-"Login Successful";
+let user=result.user;
 
 
-setTimeout(()=>{
 
-window.location="dashboard.html";
+if(user.email===ADMIN_EMAIL){
 
-},1000);
+
+alert("Admin account. Use admin login.");
+
+location="login.html";
+
+
+return;
+
+
+}
+
+
+
+location="dashboard.html";
 
 
 
 }
+
+
 catch(error){
 
 
-document.getElementById("message").style.color="red";
-
-document.getElementById("message").innerText=
+document.getElementById("error").innerText=
 error.message;
 
 
 }
 
 
-});
+
+};
+
 
 
 </script>
 
 
 </body>
+
 </html>

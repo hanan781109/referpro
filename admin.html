@@ -1,21 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>ReferPro Admin</title>
+
+<title>ReferPro Admin Panel</title>
+
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
-body{font-family:Arial;background:#f3f6fb;margin:0}
-header{background:#111827;color:white;padding:20px;text-align:center;font-size:25px}
-.card{background:white;margin:20px;padding:20px;border-radius:15px}
-table{width:100%;border-collapse:collapse}
-td,th{padding:10px;border-bottom:1px solid #ddd}
-button{padding:8px 12px;background:#16a34a;color:white;border:0;border-radius:6px}
-.red{background:#dc2626}
+
+body{
+font-family:Arial;
+background:#f3f6fb;
+margin:0;
+}
+
+header{
+background:#111827;
+color:white;
+padding:20px;
+text-align:center;
+font-size:25px;
+}
+
+.card{
+background:white;
+margin:20px;
+padding:20px;
+border-radius:15px;
+box-shadow:0 5px 15px #0002;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+padding:10px;
+border-bottom:1px solid #ddd;
+}
+
+button{
+padding:8px 12px;
+border:0;
+border-radius:6px;
+background:#16a34a;
+color:white;
+cursor:pointer;
+}
+
+.reject{
+background:#dc2626;
+}
+
 </style>
+
 </head>
 
+
 <body>
+
 
 <header>
 ReferPro Admin Panel
@@ -23,56 +67,82 @@ ReferPro Admin Panel
 
 
 <div class="card">
+
 <h2>Deposits</h2>
+
 <table>
+
 <tr>
 <th>Name</th>
 <th>Amount</th>
 <th>Status</th>
 <th>Action</th>
 </tr>
-<tbody id="depositList"></tbody>
+
+<tbody id="deposits"></tbody>
+
 </table>
+
 </div>
 
 
 
+
 <div class="card">
+
 <h2>Withdrawals</h2>
+
 <table>
+
 <tr>
 <th>Name</th>
 <th>Amount</th>
 <th>Status</th>
 <th>Action</th>
 </tr>
-<tbody id="withdrawList"></tbody>
+
+<tbody id="withdrawals"></tbody>
+
 </table>
+
 </div>
 
 
 
 <script type="module">
 
-import{initializeApp}
+
+import {initializeApp}
+
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-import{
+
+import {
+
 getAuth,
 onAuthStateChanged
+
 }
+
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-import{
+
+import {
+
 getDatabase,
 ref,
 get,
 update
+
 }
+
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
-const app=initializeApp({
+
+
+const firebaseConfig={
+
 
 apiKey:"AIzaSyB2MHb9flfcWipUxDM6hF3Hgvy9ZsBHV0g",
 
@@ -88,80 +158,127 @@ messagingSenderId:"257409426857",
 
 appId:"1:257409426857:web:8cfcdf79eab219d6f890b8"
 
-});
+};
 
+
+
+const app=initializeApp(firebaseConfig);
 
 const auth=getAuth(app);
+
 const db=getDatabase(app);
 
 
 
-onAuthStateChanged(auth,async user=>{
+
+
+onAuthStateChanged(auth,async(user)=>{
+
 
 if(!user){
+
 location="login.html";
+
 return;
+
 }
 
-let admin=await get(ref(db,"admins/"+user.uid));
+
+
+let admin =
+await get(ref(db,"admins/"+user.uid));
+
+
 
 if(admin.val()!=true){
 
 alert("Not Admin");
 
-location="dashboard.html";
+location="user-login.html";
 
 return;
 
 }
 
+
+
 loadDeposits();
+
 loadWithdrawals();
+
 
 });
 
 
 
+
+
+
 async function loadDeposits(){
 
-let data=(await get(ref(db,"deposits"))).val()||"";
+
+let data=(await get(ref(db,"deposits"))).val()||{};
+
 
 let html="";
 
+
 for(let id in data){
 
+
 let d=data[id];
+
 
 html+=`
 
 <tr>
+
 <td>${d.name}</td>
+
 <td>${d.amount}</td>
+
 <td>${d.status}</td>
 
+
 <td>
+
 
 <button onclick="approveDeposit('${id}')">
 Approve
 </button>
 
-<button class="red" onclick="rejectDeposit('${id}')">
+
+<button class="reject" onclick="rejectDeposit('${id}')">
 Reject
 </button>
 
+
 </td>
 
-</tr>`;
+
+</tr>
+
+
+`;
 
 }
 
-depositList.innerHTML=html;
+
+document.getElementById("deposits").innerHTML=html;
+
 
 }
+
+
+
 
 
 
 window.approveDeposit=async(id)=>{
+
+
+let dep=(await get(ref(db,"deposits/"+id))).val();
+
 
 await update(ref(db,"deposits/"+id),{
 
@@ -169,13 +286,42 @@ status:"approved"
 
 });
 
-loadDeposits();
+
+
+let user=(await get(ref(db,"users/"+dep.uid))).val()||{};
+
+
+
+if(user.depositBonusGiven!=true){
+
+
+await update(ref(db,"users/"+dep.uid),{
+
+wallet:Number(user.wallet||0)+50,
+
+depositBonusGiven:true
+
+});
+
 
 }
 
 
 
+alert("Deposit Approved +50");
+
+loadDeposits();
+
+
+}
+
+
+
+
+
+
 window.rejectDeposit=async(id)=>{
+
 
 await update(ref(db,"deposits/"+id),{
 
@@ -183,21 +329,28 @@ status:"rejected"
 
 });
 
+
 loadDeposits();
+
 
 }
 
 
 
 
+
+
 async function loadWithdrawals(){
 
-let data=(await get(ref(db,"withdrawals"))).val()||"";
+
+let data=(await get(ref(db,"withdrawals"))).val()||{};
+
 
 let html="";
 
 
 for(let id in data){
+
 
 let w=data[id];
 
@@ -215,28 +368,70 @@ html+=`
 
 <td>
 
+
 <button onclick="approveWithdraw('${id}')">
 Approve
 </button>
 
-<button class="red" onclick="rejectWithdraw('${id}')">
+
+<button class="reject" onclick="rejectWithdraw('${id}')">
 Reject
 </button>
 
+
 </td>
 
-</tr>`;
+</tr>
+
+`;
 
 }
 
 
-withdrawList.innerHTML=html;
+
+document.getElementById("withdrawals").innerHTML=html;
+
 
 }
+
+
+
 
 
 
 window.approveWithdraw=async(id)=>{
+
+
+let w=(await get(ref(db,"withdrawals/"+id))).val();
+
+
+let user=(await get(ref(db,"users/"+w.uid))).val()||{};
+
+
+let wallet=Number(user.wallet||0);
+
+
+let amount=Number(w.amount||0);
+
+
+
+if(wallet < amount){
+
+alert("Low Wallet Balance");
+
+return;
+
+}
+
+
+
+await update(ref(db,"users/"+w.uid),{
+
+wallet:wallet-amount
+
+});
+
+
 
 await update(ref(db,"withdrawals/"+id),{
 
@@ -244,13 +439,22 @@ status:"approved"
 
 });
 
+
+alert("Withdrawal Approved");
+
+
 loadWithdrawals();
+
 
 }
 
 
 
+
+
+
 window.rejectWithdraw=async(id)=>{
+
 
 await update(ref(db,"withdrawals/"+id),{
 
@@ -258,40 +462,16 @@ status:"rejected"
 
 });
 
+
 loadWithdrawals();
 
+
 }
 
 
-</script>async function loadDeposits(){
-   // tumhara existing code
-}
 
+</script>
 
-// 👇 YAHAN paste karo
-async function approveDepositWithBonus(id){
-
-    let dep = (await get(ref(db,"deposits/"+id))).val();
-
-    if(!dep) return;
-
-    await update(ref(db,"deposits/"+id),{
-        status:"approved"
-    });
-
-    let user = (await get(ref(db,"users/"+dep.uid))).val() || {};
-
-    if(user.depositBonusGiven !== true){
-
-        await update(ref(db,"users/"+dep.uid),{
-            wallet:Number(user.wallet || 0)+50,
-            depositBonusGiven:true
-        });
-
-    }
-
-    alert("Deposit Approved + Rs.50 Bonus");
-}
 
 </body>
 </html>

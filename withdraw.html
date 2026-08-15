@@ -69,14 +69,10 @@ button:hover{
     background:#16a34a;
 }
 
-a{
-    color:#2563eb;
-    text-decoration:none;
-}
-
-.footer{
+#message{
     text-align:center;
-    margin-top:20px;
+    margin-top:15px;
+    font-weight:bold;
 }
 
 </style>
@@ -102,7 +98,7 @@ ReferPro Withdrawal
 
 <p>
 Available Balance:
-<b>Rs. 0</b>
+<b>Check Wallet</b>
 </p>
 
 <p>
@@ -119,9 +115,10 @@ Maximum Withdrawal:
 
 
 
-<label>Select Payment Method</label>
 
-<select>
+<label>Payment Method</label>
+
+<select id="method">
 
 <option>Easypaisa</option>
 
@@ -131,43 +128,281 @@ Maximum Withdrawal:
 
 
 
+
 <label>Account Holder Name</label>
 
-<input type="text" placeholder="Enter name">
+<input 
+id="name"
+type="text"
+placeholder="Enter name">
+
+
 
 
 
 <label>Account Number</label>
 
-<input type="number" placeholder="03XXXXXXXXX">
+<input 
+id="accountNumber"
+type="number"
+placeholder="03XXXXXXXXX">
+
+
 
 
 
 <label>Withdrawal Amount</label>
 
-<input type="number" placeholder="Enter amount">
+<input 
+id="amount"
+type="number"
+placeholder="Enter amount">
 
 
 
-<button>
+
+
+<button id="withdrawBtn">
+
 Submit Withdrawal Request
+
 </button>
 
 
-
-<div class="footer">
-
-<p>
-<a href="dashboard.html">
-Back To Dashboard
-</a>
-</p>
-
-</div>
+<div id="message"></div>
 
 
 
 </div>
+
+
+
+
+<script type="module">
+
+
+import {initializeApp}
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+import {
+
+getAuth,
+
+onAuthStateChanged
+
+}
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+import {
+
+getDatabase,
+
+ref,
+
+push,
+
+set
+
+}
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+
+
+
+const firebaseConfig = {
+
+
+apiKey:
+"AIzaSyB2MHb9flfcWipUxDM6hF3Hgvy9ZsBHV0g",
+
+
+authDomain:
+"referpro-65d27.firebaseapp.com",
+
+
+databaseURL:
+"https://referpro-65d27-default-rtdb.firebaseio.com",
+
+
+projectId:
+"referpro-65d27",
+
+
+storageBucket:
+"referpro-65d27.firebasestorage.app",
+
+
+messagingSenderId:
+"257409426857",
+
+
+appId:
+"1:257409426857:web:8cfcdf79eab219d6f890b8"
+
+};
+
+
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getDatabase(app);
+
+
+
+let currentUser = null;
+
+
+
+onAuthStateChanged(auth,(user)=>{
+
+
+if(!user){
+
+window.location="login.html";
+
+return;
+
+}
+
+
+currentUser=user;
+
+
+});
+
+
+
+
+
+
+
+document
+.getElementById("withdrawBtn")
+.addEventListener("click",async()=>{
+
+
+if(!currentUser){
+
+alert("Please login first");
+
+return;
+
+}
+
+
+
+const method =
+document.getElementById("method").value;
+
+
+
+const name =
+document.getElementById("name").value.trim();
+
+
+
+const accountNumber =
+document.getElementById("accountNumber").value.trim();
+
+
+
+const amount =
+Number(document.getElementById("amount").value);
+
+
+
+
+if(!name || !accountNumber || !amount){
+
+
+document.getElementById("message").innerText =
+"Please fill all fields";
+
+
+return;
+
+}
+
+
+
+
+if(amount < 200 || amount > 7000){
+
+
+document.getElementById("message").innerText =
+"Withdrawal limit is Rs.200 - Rs.7000";
+
+
+return;
+
+
+}
+
+
+
+
+
+const withdrawRef =
+push(ref(db,"withdrawals"));
+
+
+
+
+
+await set(withdrawRef,{
+
+
+uid: currentUser.uid,
+
+
+email: currentUser.email,
+
+
+method: method,
+
+
+name:name,
+
+
+accountNumber:accountNumber,
+
+
+amount:amount,
+
+
+status:"pending",
+
+
+createdAt:Date.now()
+
+
+});
+
+
+
+
+
+document.getElementById("message").style.color="green";
+
+
+document.getElementById("message").innerText =
+"Withdrawal request submitted. Waiting for approval.";
+
+
+
+});
+
+
+
+</script>
 
 
 </body>

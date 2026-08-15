@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>ReferPro Admin</title>
+
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
@@ -10,6 +11,7 @@ font-family:Arial;
 background:#f3f6fb;
 margin:0;
 }
+
 header{
 background:#111827;
 color:white;
@@ -17,35 +19,38 @@ padding:20px;
 text-align:center;
 font-size:25px;
 }
-.container{
-padding:20px;
-}
+
 .card{
 background:white;
+margin:20px;
 padding:20px;
 border-radius:15px;
-margin-bottom:20px;
 box-shadow:0 5px 15px #0002;
 }
-button{
-padding:8px 12px;
-border:0;
-border-radius:6px;
-background:#16a34a;
-color:white;
-cursor:pointer;
-}
-.reject{
-background:#dc2626;
-}
+
 table{
 width:100%;
 border-collapse:collapse;
 }
+
 td,th{
 padding:10px;
 border-bottom:1px solid #ddd;
 }
+
+button{
+background:#16a34a;
+color:white;
+border:0;
+padding:8px 12px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.reject{
+background:#dc2626;
+}
+
 </style>
 
 </head>
@@ -57,49 +62,25 @@ ReferPro Admin Panel
 </header>
 
 
-<div class="container">
-
-
-<div class="card">
-<h2>Stats</h2>
-
-<p>Total Users:
-<b id="users">0</b>
-</p>
-
-<p>Pending Deposits:
-<b id="depCount">0</b>
-</p>
-
-<p>Pending Withdrawals:
-<b id="withCount">0</b>
-</p>
-
-</div>
-
-
-
 <div class="card">
 
 <h2>Deposits</h2>
 
 <table>
 
-<thead>
 <tr>
 <th>Name</th>
 <th>Amount</th>
 <th>Status</th>
 <th>Action</th>
 </tr>
-</thead>
 
-<tbody id="deposits">
-</tbody>
+<tbody id="depositList"></tbody>
 
 </table>
 
 </div>
+
 
 
 
@@ -109,29 +90,23 @@ ReferPro Admin Panel
 
 <table>
 
-<thead>
 <tr>
 <th>Name</th>
 <th>Amount</th>
 <th>Status</th>
 <th>Action</th>
 </tr>
-</thead>
 
-<tbody id="withdrawals">
-</tbody>
+<tbody id="withdrawList"></tbody>
 
 </table>
 
 </div>
 
 
-</div>
-
 
 
 <script type="module">
-
 
 import {initializeApp}
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -194,12 +169,13 @@ return;
 }
 
 
-let admin=await get(ref(db,"admins/"+user.uid));
+let admin =
+await get(ref(db,"admins/"+user.uid));
 
 
 if(admin.val()!=true){
 
-alert("Not Admin");
+alert("Admin only");
 
 location="dashboard.html";
 
@@ -208,31 +184,11 @@ return;
 }
 
 
-loadUsers();
-
 loadDeposits();
 
-loadWithdrawals();
-
+loadWithdraws();
 
 });
-
-
-
-
-
-async function loadUsers(){
-
-let s=await get(ref(db,"users"));
-
-let users=s.val()||{};
-
-
-document.getElementById("users").innerText=
-Object.keys(users).length;
-
-}
-
 
 
 
@@ -241,22 +197,22 @@ Object.keys(users).length;
 
 async function loadDeposits(){
 
-let s=await get(ref(db,"deposits"));
 
-let data=s.val()||{};
+let snap =
+await get(ref(db,"deposits"));
+
+
+let data =
+snap.val() || {};
+
 
 let html="";
-
-let count=0;
 
 
 for(let id in data){
 
+
 let d=data[id];
-
-
-if(d.status=="pending")
-count++;
 
 
 html+=`
@@ -269,30 +225,31 @@ html+=`
 
 <td>${d.status}</td>
 
+
 <td>
+
 
 <button onclick="approveDeposit('${id}')">
 Approve
 </button>
 
 
-<button class="reject"
-onclick="rejectDeposit('${id}')">
+<button class="reject" onclick="rejectDeposit('${id}')">
 Reject
 </button>
+
 
 </td>
 
 </tr>
+
 
 `;
 
 }
 
 
-document.getElementById("depCount").innerText=count;
-
-document.getElementById("deposits").innerHTML=html;
+depositList.innerHTML=html;
 
 
 }
@@ -302,16 +259,57 @@ document.getElementById("deposits").innerHTML=html;
 
 
 
+window.approveDeposit=async function(id){
 
-window.approveDeposit=async id=>{
 
-await update(ref(db,"deposits/"+id),{
+let dep =
+(await get(ref(db,"deposits/"+id))).val();
 
+
+
+await update(
+ref(db,"deposits/"+id),
+{
 status:"approved"
+}
+);
 
-});
+
+
+if(dep.uid){
+
+
+let user =
+(await get(ref(db,"users/"+dep.uid))).val() || {};
+
+
+
+if(user.depositBonusGiven != true){
+
+
+await update(
+ref(db,"users/"+dep.uid),
+{
+
+wallet:Number(user.wallet||0)+50,
+
+depositBonusGiven:true
+
+}
+
+);
+
+
+}
+
+}
+
+
+alert("Deposit Approved + Rs.50 Bonus");
+
 
 loadDeposits();
+
 
 }
 
@@ -319,13 +317,17 @@ loadDeposits();
 
 
 
-window.rejectDeposit=async id=>{
 
-await update(ref(db,"deposits/"+id),{
+window.rejectDeposit=async function(id){
 
+
+await update(
+ref(db,"deposits/"+id),
+{
 status:"rejected"
+}
+);
 
-});
 
 loadDeposits();
 
@@ -336,25 +338,25 @@ loadDeposits();
 
 
 
-async function loadWithdrawals(){
 
-let s=await get(ref(db,"withdrawals"));
+async function loadWithdraws(){
 
-let data=s.val()||{};
+
+let snap =
+await get(ref(db,"withdrawals"));
+
+
+let data =
+snap.val() || {};
+
 
 let html="";
-
-let count=0;
-
 
 
 for(let id in data){
 
+
 let w=data[id];
-
-
-if(w.status=="pending")
-count++;
 
 
 html+=`
@@ -367,6 +369,7 @@ html+=`
 
 <td>${w.status}</td>
 
+
 <td>
 
 
@@ -375,8 +378,7 @@ Approve
 </button>
 
 
-<button class="reject"
-onclick="rejectWithdraw('${id}')">
+<button class="reject" onclick="rejectWithdraw('${id}')">
 Reject
 </button>
 
@@ -390,9 +392,7 @@ Reject
 }
 
 
-document.getElementById("withCount").innerText=count;
-
-document.getElementById("withdrawals").innerHTML=html;
+withdrawList.innerHTML=html;
 
 
 }
@@ -401,32 +401,40 @@ document.getElementById("withdrawals").innerHTML=html;
 
 
 
-window.approveWithdraw=async id=>{
 
-await update(ref(db,"withdrawals/"+id),{
+window.approveWithdraw=async function(id){
 
+
+await update(
+ref(db,"withdrawals/"+id),
+{
 status:"approved"
+}
+);
 
-});
 
-loadWithdrawals();
+loadWithdraws();
+
 
 }
 
 
 
 
-window.rejectWithdraw=async id=>{
 
 
-await update(ref(db,"withdrawals/"+id),{
+window.rejectWithdraw=async function(id){
 
+
+await update(
+ref(db,"withdrawals/"+id),
+{
 status:"rejected"
+}
+);
 
-});
 
-
-loadWithdrawals();
+loadWithdraws();
 
 
 }

@@ -4,7 +4,7 @@
 
 <title>ReferPro Admin</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
 
@@ -27,14 +27,17 @@ background:white;
 margin:20px;
 padding:20px;
 border-radius:15px;
+box-shadow:0 5px 15px #0002;
 }
 
 button{
 padding:8px 12px;
 border:0;
-border-radius:6px;
+border-radius:7px;
 background:green;
 color:white;
+cursor:pointer;
+margin:3px;
 }
 
 .red{
@@ -57,6 +60,7 @@ border-bottom:1px solid #ddd;
 
 <body>
 
+
 <header>
 ReferPro Admin Panel
 </header>
@@ -71,7 +75,6 @@ Logout
 </div>
 
 
-
 <div class="box">
 
 <h2>Deposits</h2>
@@ -83,7 +86,6 @@ Logout
 </table>
 
 </div>
-
 
 
 
@@ -154,27 +156,22 @@ const auth=getAuth(app);
 const db=getDatabase(app);
 
 
+const adminEmail="hananjanweribro@gmail.com";
 
 
 
-onAuthStateChanged(auth,async(user)=>{
+onAuthStateChanged(auth,(user)=>{
 
 
 if(!user){
 
 location="login.html";
-
 return;
 
 }
 
 
-let admin=await get(
-ref(db,"admins/"+user.uid)
-);
-
-
-if(admin.val()!=true){
+if(user.email!==adminEmail){
 
 alert("You are not admin");
 
@@ -208,6 +205,7 @@ location="login.html";
 
 
 
+
 async function loadDeposits(){
 
 
@@ -219,7 +217,6 @@ let html="";
 
 for(let id in data){
 
-
 let d=data[id];
 
 
@@ -229,7 +226,7 @@ html+=`
 
 <td>${d.name}</td>
 
-<td>${d.amount}</td>
+<td>Rs ${d.amount}</td>
 
 <td>${d.status}</td>
 
@@ -244,7 +241,6 @@ Approve
 Reject
 </button>
 
-
 </td>
 
 </tr>
@@ -258,7 +254,6 @@ depositList.innerHTML=html;
 
 
 }
-
 
 
 
@@ -280,27 +275,21 @@ status:"approved"
 let u=(await get(ref(db,"users/"+d.uid))).val()||{};
 
 
-if(u.depositBonusGiven!=true){
-
 
 await update(ref(db,"users/"+d.uid),{
 
-wallet:Number(u.wallet||0)+50,
-
-depositBonusGiven:true
+wallet:Number(u.wallet||0)+50
 
 });
 
 
-}
-
-
-alert("Deposit Approved");
+alert("Deposit Approved +50");
 
 loadDeposits();
 
 
-}
+};
+
 
 
 
@@ -318,8 +307,8 @@ status:"rejected"
 
 loadDeposits();
 
+};
 
-}
 
 
 
@@ -347,9 +336,10 @@ html+=`
 
 <td>${w.name}</td>
 
-<td>${w.amount}</td>
+<td>Rs ${w.amount}</td>
 
 <td>${w.status}</td>
+
 
 <td>
 
@@ -365,6 +355,7 @@ Reject
 
 </td>
 
+
 </tr>
 
 `;
@@ -376,6 +367,7 @@ withdrawList.innerHTML=html;
 
 
 }
+
 
 
 
@@ -396,7 +388,6 @@ let wallet=Number(u.wallet||0);
 let amount=Number(w.amount||0);
 
 
-
 if(wallet<amount){
 
 alert("Low wallet");
@@ -413,7 +404,6 @@ wallet:wallet-amount
 });
 
 
-
 await update(ref(db,"withdrawals/"+id),{
 
 status:"approved"
@@ -426,7 +416,7 @@ alert("Withdrawal Approved");
 loadWithdrawals();
 
 
-}
+};
 
 
 
@@ -446,8 +436,7 @@ status:"rejected"
 loadWithdrawals();
 
 
-}
-
+};
 
 
 </script>

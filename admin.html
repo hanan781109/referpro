@@ -1,111 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>ReferPro Admin Panel</title>
+<title>ReferPro Admin</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
 body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#f3f6fb;
+font-family:Arial;
+background:#f3f6fb;
+margin:0;
 }
-
 header{
-    background:#111827;
-    color:white;
-    padding:20px;
-    text-align:center;
-    font-size:25px;
-    font-weight:bold;
+background:#111827;
+color:white;
+padding:20px;
+text-align:center;
+font-size:25px;
 }
-
 .container{
-    max-width:1100px;
-    margin:auto;
-    padding:25px;
+padding:20px;
 }
-
 .card{
-    background:white;
-    padding:25px;
-    border-radius:15px;
-    box-shadow:0 5px 15px #0002;
-    margin-bottom:20px;
+background:white;
+padding:20px;
+border-radius:15px;
+margin-bottom:20px;
+box-shadow:0 5px 15px #0002;
 }
-
-h2{
-    color:#2563eb;
-}
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:15px;
-}
-
-.stat{
-    background:#f8fafc;
-    padding:20px;
-    border-radius:12px;
-    text-align:center;
-}
-
-.stat b{
-    display:block;
-    font-size:30px;
-    color:#2563eb;
-    margin-top:8px;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-th,td{
-    padding:12px;
-    border-bottom:1px solid #ddd;
-    text-align:left;
-}
-
 button{
-    padding:10px 18px;
-    border:0;
-    border-radius:8px;
-    background:#2563eb;
-    color:white;
-    cursor:pointer;
+padding:8px 12px;
+border:0;
+border-radius:6px;
+background:#16a34a;
+color:white;
+cursor:pointer;
 }
-
-button:hover{
-    background:#16a34a;
+.reject{
+background:#dc2626;
 }
-
-.logout{
-    background:#dc2626;
+table{
+width:100%;
+border-collapse:collapse;
 }
-
-.message{
-    padding:15px;
-    border-radius:8px;
-    background:#fee2e2;
-    color:#991b1b;
-    display:none;
-}
-
-@media(max-width:700px){
-    .stats{
-        grid-template-columns:1fr;
-    }
-
-    table{
-        font-size:13px;
-    }
+td,th{
+padding:10px;
+border-bottom:1px solid #ddd;
 }
 </style>
+
 </head>
 
 <body>
@@ -114,150 +56,152 @@ button:hover{
 ReferPro Admin Panel
 </header>
 
+
 <div class="container">
 
-<div id="message" class="message"></div>
 
 <div class="card">
-<h2>Admin Dashboard</h2>
+<h2>Stats</h2>
 
-<div class="stats">
+<p>Total Users:
+<b id="users">0</b>
+</p>
 
-<div class="stat">
-Total Users
-<b id="totalUsers">0</b>
-</div>
+<p>Pending Deposits:
+<b id="depCount">0</b>
+</p>
 
-<div class="stat">
-Active Users
-<b id="activeUsers">0</b>
-</div>
-
-<div class="stat">
-Admins
-<b id="totalAdmins">0</b>
-</div>
+<p>Pending Withdrawals:
+<b id="withCount">0</b>
+</p>
 
 </div>
 
-</div>
+
 
 <div class="card">
 
-<h2>Users</h2>
+<h2>Deposits</h2>
 
 <table>
 
 <thead>
 <tr>
 <th>Name</th>
-<th>Email</th>
-<th>Phone</th>
-<th>Referral Code</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Action</th>
 </tr>
 </thead>
 
-<tbody id="usersTable">
+<tbody id="deposits">
 </tbody>
 
 </table>
 
 </div>
 
+
+
 <div class="card">
 
-<button class="logout" id="logoutBtn">
-Logout
-</button>
+<h2>Withdrawals</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Name</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="withdrawals">
+</tbody>
+
+</table>
 
 </div>
 
+
 </div>
+
 
 
 <script type="module">
 
-import {
-initializeApp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {initializeApp}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
 
 import {
 getAuth,
-onAuthStateChanged,
-signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
 
 import {
 getDatabase,
 ref,
-get
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+get,
+update
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
-const firebaseConfig = {
 
-apiKey: "AIzaSyB2MHb9flfcWipUxDM6hF3Hgvy9ZsBHV0g",
+const firebaseConfig={
 
-authDomain: "referpro-65d27.firebaseapp.com",
+apiKey:"AIzaSyB2MHb9flfcWipUxDM6hF3Hgvy9ZsBHV0g",
 
-projectId: "referpro-65d27",
+authDomain:"referpro-65d27.firebaseapp.com",
 
-storageBucket: "referpro-65d27.firebasestorage.app",
+databaseURL:"https://referpro-65d27-default-rtdb.firebaseio.com",
 
-messagingSenderId: "257409426857",
+projectId:"referpro-65d27",
 
-appId: "1:257409426857:web:8cfcdf79eab219d6f890b8",
+storageBucket:"referpro-65d27.firebasestorage.app",
 
-measurementId: "G-GFC4WMB2HN"
+messagingSenderId:"257409426857",
+
+appId:"1:257409426857:web:8cfcdf79eab219d6f890b8"
 
 };
 
 
-const app = initializeApp(firebaseConfig);
 
-const auth = getAuth(app);
+const app=initializeApp(firebaseConfig);
 
-const db = getDatabase(app);
+const auth=getAuth(app);
 
-
-const message = document.getElementById("message");
+const db=getDatabase(app);
 
 
-function showMessage(text){
 
-message.innerText = text;
+onAuthStateChanged(auth,async user=>{
 
-message.style.display = "block";
-
-}
-
-
-onAuthStateChanged(auth, async (user)=>{
 
 if(!user){
 
-window.location = "login.html";
+location="login.html";
 
 return;
 
 }
 
 
-try{
-
-const adminSnapshot =
-await get(ref(db,"admins/"+user.uid));
+let admin=await get(ref(db,"admins/"+user.uid));
 
 
-if(adminSnapshot.val() !== true){
+if(admin.val()!=true){
 
-showMessage("Access Denied: You are not an admin.");
+alert("Not Admin");
 
-setTimeout(()=>{
-
-window.location = "dashboard.html";
-
-},2000);
+location="dashboard.html";
 
 return;
 
@@ -266,96 +210,231 @@ return;
 
 loadUsers();
 
-}
-catch(error){
+loadDeposits();
 
-console.error(error);
+loadWithdrawals();
 
-showMessage("Admin verification failed.");
-
-}
 
 });
+
+
+
 
 
 async function loadUsers(){
 
-try{
+let s=await get(ref(db,"users"));
 
-const snapshot =
-await get(ref(db,"users"));
+let users=s.val()||{};
 
-const users =
-snapshot.val() || {};
 
-const table =
-document.getElementById("usersTable");
+document.getElementById("users").innerText=
+Object.keys(users).length;
 
-table.innerHTML = "";
+}
 
-let total = 0;
 
-for(const uid in users){
 
-const user = users[uid];
 
-total++;
 
-const row = document.createElement("tr");
 
-row.innerHTML = `
 
-<td>${user.name || "-"}</td>
+async function loadDeposits(){
 
-<td>${user.email || "-"}</td>
+let s=await get(ref(db,"deposits"));
 
-<td>${user.phone || "-"}</td>
+let data=s.val()||{};
 
-<td>${user.referralCode || "-"}</td>
+let html="";
+
+let count=0;
+
+
+for(let id in data){
+
+let d=data[id];
+
+
+if(d.status=="pending")
+count++;
+
+
+html+=`
+
+<tr>
+
+<td>${d.name}</td>
+
+<td>${d.amount}</td>
+
+<td>${d.status}</td>
+
+<td>
+
+<button onclick="approveDeposit('${id}')">
+Approve
+</button>
+
+
+<button class="reject"
+onclick="rejectDeposit('${id}')">
+Reject
+</button>
+
+</td>
+
+</tr>
 
 `;
 
-table.appendChild(row);
+}
+
+
+document.getElementById("depCount").innerText=count;
+
+document.getElementById("deposits").innerHTML=html;
+
 
 }
 
 
-document.getElementById("totalUsers").innerText = total;
-
-document.getElementById("activeUsers").innerText = total;
 
 
-const adminsSnapshot =
-await get(ref(db,"admins"));
-
-const admins =
-adminsSnapshot.val() || {};
-
-document.getElementById("totalAdmins").innerText =
-Object.keys(admins).length;
-
-}
-catch(error){
-
-console.error(error);
-
-showMessage("Users load nahi ho rahe: " + error.message);
-
-}
-
-}
 
 
-document.getElementById("logoutBtn")
-.addEventListener("click",async()=>{
 
-await signOut(auth);
+window.approveDeposit=async id=>{
 
-window.location = "login.html";
+await update(ref(db,"deposits/"+id),{
+
+status:"approved"
 
 });
 
+loadDeposits();
+
+}
+
+
+
+
+
+window.rejectDeposit=async id=>{
+
+await update(ref(db,"deposits/"+id),{
+
+status:"rejected"
+
+});
+
+loadDeposits();
+
+}
+
+
+
+
+
+
+async function loadWithdrawals(){
+
+let s=await get(ref(db,"withdrawals"));
+
+let data=s.val()||{};
+
+let html="";
+
+let count=0;
+
+
+
+for(let id in data){
+
+let w=data[id];
+
+
+if(w.status=="pending")
+count++;
+
+
+html+=`
+
+<tr>
+
+<td>${w.name}</td>
+
+<td>${w.amount}</td>
+
+<td>${w.status}</td>
+
+<td>
+
+
+<button onclick="approveWithdraw('${id}')">
+Approve
+</button>
+
+
+<button class="reject"
+onclick="rejectWithdraw('${id}')">
+Reject
+</button>
+
+
+</td>
+
+</tr>
+
+`;
+
+}
+
+
+document.getElementById("withCount").innerText=count;
+
+document.getElementById("withdrawals").innerHTML=html;
+
+
+}
+
+
+
+
+
+window.approveWithdraw=async id=>{
+
+await update(ref(db,"withdrawals/"+id),{
+
+status:"approved"
+
+});
+
+loadWithdrawals();
+
+}
+
+
+
+
+window.rejectWithdraw=async id=>{
+
+
+await update(ref(db,"withdrawals/"+id),{
+
+status:"rejected"
+
+});
+
+
+loadWithdrawals();
+
+
+}
+
+
+
 </script>
+
 
 </body>
 </html>

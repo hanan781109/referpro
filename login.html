@@ -1,424 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ReferPro - Admin Login</title>
+<title>ReferPro Login</title>
 
 <style>
 
-*{
-    box-sizing:border-box;
-}
-
 body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#f3f6fb;
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.container{
-    width:100%;
-    max-width:420px;
-    padding:20px;
+margin:0;
+font-family:Arial;
+background:#f3f6fb;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
 }
 
 .card{
-    background:white;
-    padding:30px;
-    border-radius:16px;
-    box-shadow:0 5px 20px #0002;
-}
-
-.logo{
-    text-align:center;
-    font-size:30px;
-    font-weight:bold;
-    color:#111827;
-    margin-bottom:8px;
-}
-
-.subtitle{
-    text-align:center;
-    color:#666;
-    margin-bottom:30px;
+background:white;
+width:350px;
+padding:30px;
+border-radius:15px;
+box-shadow:0 5px 20px #0002;
 }
 
 h2{
-    text-align:center;
-    color:#2563eb;
-    margin-top:0;
-}
-
-label{
-    display:block;
-    margin-top:15px;
-    margin-bottom:6px;
-    font-weight:bold;
+text-align:center;
+color:#2563eb;
 }
 
 input{
-    width:100%;
-    padding:13px;
-    border:1px solid #ccc;
-    border-radius:8px;
-    font-size:15px;
-}
-
-input:focus{
-    outline:none;
-    border-color:#2563eb;
+width:100%;
+padding:12px;
+margin-top:12px;
+border-radius:8px;
+border:1px solid #ccc;
 }
 
 button{
-    width:100%;
-    padding:14px;
-    margin-top:25px;
-    background:#2563eb;
-    color:white;
-    border:0;
-    border-radius:8px;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
+width:100%;
+padding:13px;
+margin-top:20px;
+background:#2563eb;
+color:white;
+border:0;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
 }
 
-button:hover{
-    background:#16a34a;
+#error{
+color:red;
+text-align:center;
+margin-top:15px;
 }
 
-button:disabled{
-    background:#999;
-    cursor:not-allowed;
-}
-
-.error{
-    display:none;
-    margin-top:15px;
-    padding:12px;
-    background:#fee2e2;
-    color:#b91c1c;
-    border-radius:8px;
-    font-size:14px;
-}
-
-.footer{
-    text-align:center;
-    color:#777;
-    margin-top:20px;
-    font-size:13px;
+a{
+display:block;
+text-align:center;
+margin-top:15px;
 }
 
 </style>
 
 </head>
 
+
 <body>
 
-<div class="container">
 
 <div class="card">
 
-<div class="logo">
-ReferPro
-</div>
 
-<p class="subtitle">
-Admin Panel Login
-</p>
-
-<h2>Login</h2>
+<h2>
+ReferPro Login
+</h2>
 
 
-<form id="loginForm">
+<input 
+type="email"
+id="email"
+placeholder="Email">
 
-<label for="email">
-Email
-</label>
 
 <input
-    type="email"
-    id="email"
-    placeholder="Enter admin email"
-    required
->
+type="password"
+id="password"
+placeholder="Password">
 
 
-<label for="password">
-Password
-</label>
-
-<input
-    type="password"
-    id="password"
-    placeholder="Enter password"
-    required
->
-
-
-<button type="submit" id="loginButton">
+<button id="login">
 Login
 </button>
 
-<div id="errorMessage" class="error"></div>
 
-</form>
+<div id="error"></div>
 
 
-<div class="footer">
-© 2026 ReferPro. All rights reserved.
-</div>
+<a href="register.html">
+Create Account
+</a>
 
-</div>
 
 </div>
+
+
 
 
 <script type="module">
 
-import {
-    initializeApp
-}
+
+import {initializeApp}
+
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 
 import {
-    getAuth,
-    signInWithEmailAndPassword,
-    onAuthStateChanged,
-    signOut
+
+getAuth,
+signInWithEmailAndPassword
+
 }
+
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-const firebaseConfig = {
 
-    apiKey:
-    "AIzaSyB2MHb9flfcWipUxDM6hF3Hgvy9ZsBHV0g",
 
-    authDomain:
-    "referpro-65d27.firebaseapp.com",
+const firebaseConfig={
 
-    databaseURL:
-    "https://referpro-65d27-default-rtdb.firebaseio.com",
 
-    projectId:
-    "referpro-65d27",
+apiKey:"AIzaSyB2MHb9flfcWipUxDM6hF3Hgvy9ZsBHV0g",
 
-    storageBucket:
-    "referpro-65d27.firebasestorage.app",
+authDomain:"referpro-65d27.firebaseapp.com",
 
-    messagingSenderId:
-    "257409426857",
+databaseURL:"https://referpro-65d27-default-rtdb.firebaseio.com",
 
-    appId:
-    "1:257409426857:web:8cfcdf79eab219d6f890b8"
+projectId:"referpro-65d27",
+
+storageBucket:"referpro-65d27.firebasestorage.app",
+
+messagingSenderId:"257409426857",
+
+appId:"1:257409426857:web:8cfcdf79eab219d6f890b8"
 
 };
 
 
-const app = initializeApp(firebaseConfig);
 
-const auth = getAuth(app);
+const app=initializeApp(firebaseConfig);
 
-
-/*
-ADMIN UID
-*/
-
-const ADMIN_UID =
-"WK9SL4msIHWZR4zelvWM9Wko2fl2";
+const auth=getAuth(app);
 
 
-const form =
-document.getElementById("loginForm");
-
-const loginButton =
-document.getElementById("loginButton");
-
-const errorMessage =
-document.getElementById("errorMessage");
 
 
-/*
-SHOW ERROR
-*/
 
-function showError(message){
+const ADMIN_EMAIL="hananjanweribro@gmail.com";
 
-    errorMessage.innerText = message;
 
-    errorMessage.style.display = "block";
+
+
+
+login.onclick=async()=>{
+
+
+let email=
+document.getElementById("email").value.trim();
+
+
+let password=
+document.getElementById("password").value;
+
+
+
+try{
+
+
+let result=
+await signInWithEmailAndPassword(
+auth,
+email,
+password
+);
+
+
+
+let user=result.user;
+
+
+
+
+if(user.email===ADMIN_EMAIL){
+
+
+window.location.href="admin.html";
+
+
+}
+
+else{
+
+
+window.location.href="dashboard.html";
+
 
 }
 
 
-/*
-CHECK EXISTING LOGIN
-*/
 
-onAuthStateChanged(auth, async (user) => {
+}
 
-    if(!user){
-        return;
-    }
 
+catch(e){
 
-    if(user.uid === ADMIN_UID){
 
-        window.location.replace("admin.html");
+document.getElementById("error").innerText=
+e.message;
 
-        return;
 
-    }
+}
 
 
-    /*
-    Logged-in user is NOT admin
-    */
 
-    await signOut(auth);
+};
 
-});
-
-
-/*
-LOGIN
-*/
-
-form.addEventListener("submit", async function(e){
-
-    e.preventDefault();
-
-
-    errorMessage.style.display = "none";
-
-
-    const email =
-    document.getElementById("email")
-    .value
-    .trim();
-
-
-    const password =
-    document.getElementById("password")
-    .value;
-
-
-    loginButton.disabled = true;
-
-    loginButton.innerText =
-    "Logging in...";
-
-
-    try{
-
-        const userCredential =
-        await signInWithEmailAndPassword(
-            auth,
-            email,
-            password
-        );
-
-
-        const user =
-        userCredential.user;
-
-
-        /*
-        CHECK ADMIN UID
-        */
-
-        if(user.uid !== ADMIN_UID){
-
-            await signOut(auth);
-
-            showError(
-                "Access denied. This account is not an admin account."
-            );
-
-            loginButton.disabled = false;
-
-            loginButton.innerText =
-            "Login";
-
-            return;
-
-        }
-
-
-        /*
-        ADMIN LOGIN SUCCESS
-        */
-
-        window.location.replace("admin.html");
-
-
-    }
-    catch(error){
-
-        console.error(error);
-
-
-        let message =
-        "Login failed. Please check your email and password.";
-
-
-        if(error.code === "auth/invalid-credential"){
-
-            message =
-            "Incorrect email or password.";
-
-        }
-
-        else if(error.code === "auth/user-not-found"){
-
-            message =
-            "No account found with this email.";
-
-        }
-
-        else if(error.code === "auth/wrong-password"){
-
-            message =
-            "Incorrect password.";
-
-        }
-
-        else if(error.code === "auth/invalid-email"){
-
-            message =
-            "Please enter a valid email.";
-
-        }
-
-        else if(error.code === "auth/too-many-requests"){
-
-            message =
-            "Too many attempts. Please try again later.";
-
-        }
-
-
-        showError(message);
-
-
-        loginButton.disabled = false;
-
-        loginButton.innerText =
-        "Login";
-
-    }
-
-});
 
 </script>
+
 
 </body>
 </html>

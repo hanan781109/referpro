@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,10 +10,15 @@
 
 <style>
 
+*{
+    box-sizing:border-box;
+}
+
 body{
     margin:0;
     font-family:Arial,sans-serif;
     background:#f3f6fb;
+    color:#111827;
 }
 
 header{
@@ -30,6 +36,35 @@ header{
     padding:25px;
 }
 
+.menu{
+    text-align:center;
+    margin-bottom:20px;
+    background:white;
+    padding:15px;
+    border-radius:12px;
+    box-shadow:0 5px 15px #0002;
+}
+
+.menu a{
+    display:inline-block;
+    margin:6px 10px;
+    color:#2563eb;
+    font-weight:bold;
+    text-decoration:none;
+}
+
+.menu a:hover{
+    color:#16a34a;
+}
+
+.notice{
+    background:#fff7d6;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:20px;
+    text-align:center;
+}
+
 .cards{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -45,6 +80,7 @@ header{
 
 .card h2{
     color:#2563eb;
+    margin-top:0;
 }
 
 .amount{
@@ -61,32 +97,53 @@ button{
     border-radius:8px;
     cursor:pointer;
     margin-top:10px;
+    font-size:15px;
+    font-weight:bold;
 }
 
 button:hover{
     background:#16a34a;
 }
 
+button:active{
+    transform:scale(.98);
+}
+
 a{
     text-decoration:none;
 }
 
-.menu{
+.section-title{
     text-align:center;
-    margin-bottom:20px;
+    margin:35px 0 20px;
+    color:#111827;
 }
 
-.menu a{
-    margin:8px;
-    color:#2563eb;
-    font-weight:bold;
+.package{
+    text-align:center;
+    transition:0.3s;
+    border:1px solid #e5e7eb;
 }
 
-.notice{
-    background:#fff7d6;
-    padding:15px;
-    border-radius:10px;
-    margin-bottom:20px;
+.package:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 25px #0003;
+}
+
+.package h2{
+    margin-bottom:15px;
+}
+
+.package .amount{
+    font-size:32px;
+}
+
+.package p{
+    color:#6b7280;
+}
+
+.package button{
+    width:100%;
 }
 
 .footer{
@@ -95,168 +152,306 @@ a{
     color:#555;
 }
 
+@media(max-width:600px){
+
+    header{
+        font-size:21px;
+    }
+
+    .container{
+        padding:15px;
+    }
+
+    .menu a{
+        display:inline-block;
+        margin:5px;
+        font-size:14px;
+    }
+
+    .card{
+        padding:20px;
+    }
+
+}
+
 </style>
 
 </head>
 
-
 <body>
 
-
 <header>
-ReferPro Dashboard
+    ReferPro Dashboard
 </header>
-
-
 
 <div class="container">
 
+    <div class="menu">
 
-<div class="menu">
+        <a href="index.html">
+            Home
+        </a>
 
-<a href="index.html">Home</a>
+        <a href="deposit.html">
+            Deposit
+        </a>
 
-<a href="deposit.html">Deposit</a>
+        <a href="withdraw.html">
+            Withdrawal
+        </a>
 
-<a href="withdraw.html">Withdrawal</a>
+        <a href="login.html">
+            Logout
+        </a>
 
-<a href="login.html">Logout</a>
+    </div>
+
+
+    <div class="notice">
+
+        Welcome to your ReferPro account dashboard.
+
+    </div>
+
+
+    <!-- USER DASHBOARD -->
+
+    <div class="cards">
+
+
+        <div class="card">
+
+            <h2>Profile</h2>
+
+            <p>
+                Name: User
+            </p>
+
+            <p>
+                Status: Active
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>Wallet</h2>
+
+            <div class="amount">
+                Rs. 0
+            </div>
+
+            <p>
+                Available Balance
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>Deposit</h2>
+
+            <p>
+                Package Amount
+            </p>
+
+            <div class="amount">
+                Rs. 500
+            </div>
+
+            <a href="deposit.html">
+
+                <button>
+                    Make Deposit
+                </button>
+
+            </a>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>Referral</h2>
+
+            <p>
+                Total Referrals
+            </p>
+
+            <div class="amount">
+                0
+            </div>
+
+            <a href="referral.html">
+
+                <button>
+                    View Team
+                </button>
+
+            </a>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>Level</h2>
+
+            <p>
+                Current Level
+            </p>
+
+            <div class="amount">
+                Level 1
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>Withdrawal</h2>
+
+            <p>
+                Request your withdrawal
+            </p>
+
+            <a href="withdraw.html">
+
+                <button>
+                    Withdraw
+                </button>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- PACKAGES -->
+
+    <h2 class="section-title">
+        Available Packages
+    </h2>
+
+
+    <div class="cards">
+
+
+        <div class="card package">
+
+            <h2>
+                Package 1
+            </h2>
+
+            <div class="amount">
+                Rs. 400
+            </div>
+
+            <p>
+                Purchase Package
+            </p>
+
+            <button onclick="purchasePackage(400)">
+                Purchase
+            </button>
+
+        </div>
+
+
+        <div class="card package">
+
+            <h2>
+                Package 2
+            </h2>
+
+            <div class="amount">
+                Rs. 700
+            </div>
+
+            <p>
+                Purchase Package
+            </p>
+
+            <button onclick="purchasePackage(700)">
+                Purchase
+            </button>
+
+        </div>
+
+
+        <div class="card package">
+
+            <h2>
+                Package 3
+            </h2>
+
+            <div class="amount">
+                Rs. 1,500
+            </div>
+
+            <p>
+                Purchase Package
+            </p>
+
+            <button onclick="purchasePackage(1500)">
+                Purchase
+            </button>
+
+        </div>
+
+
+        <div class="card package">
+
+            <h2>
+                Package 4
+            </h2>
+
+            <div class="amount">
+                Rs. 3,000
+            </div>
+
+            <p>
+                Purchase Package
+            </p>
+
+            <button onclick="purchasePackage(3000)">
+                Purchase
+            </button>
+
+        </div>
+
+
+    </div>
 
 </div>
-
-
-
-<div class="notice">
-
-Welcome to your ReferPro account dashboard.
-
-</div>
-
-
-
-<div class="cards">
-
-
-<div class="card">
-
-<h2>Profile</h2>
-
-<p>Name: User</p>
-
-<p>Status: Active</p>
-
-</div>
-
-
-
-<div class="card">
-
-<h2>Wallet</h2>
-
-<div class="amount">
-Rs. 0
-</div>
-
-<p>Available Balance</p>
-
-</div>
-
-
-
-<div class="card">
-
-<h2>Deposit</h2>
-
-<p>Package Amount</p>
-
-<div class="amount">
-Rs. 500
-</div>
-
-<a href="deposit.html">
-
-<button>
-Make Deposit
-</button>
-
-</a>
-
-</div>
-
-
-
-<div class="card">
-
-<h2>Referral</h2>
-
-<p>Total Referrals</p>
-
-<div class="amount">
-0
-</div>
-
-<a href="referral.html">
-
-<button>
-View Team
-</button>
-
-</a>
-
-</div>
-
-
-
-<div class="card">
-
-<h2>Level</h2>
-
-<p>
-Current Level
-</p>
-
-<div class="amount">
-Level 1
-</div>
-
-</div>
-
-
-
-<div class="card">
-
-<h2>Withdrawal</h2>
-
-<p>
-Request your withdrawal
-</p>
-
-<a href="withdraw.html">
-
-<button>
-Withdraw
-</button>
-
-</a>
-
-</div>
-
-
-</div>
-
-
-</div>
-
 
 
 <div class="footer">
 
-<p>
-ReferPro Dashboard
-</p>
+    <p>
+        ReferPro Dashboard
+    </p>
 
 </div>
 
 
+<script>
+
+function purchasePackage(amount){
+
+    alert(
+        "Package selected: Rs. " +
+        amount.toLocaleString()
+    );
+
+}
+
+</script>
+
 </body>
 </html>
+```

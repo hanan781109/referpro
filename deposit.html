@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,6 +59,7 @@ input{
     margin:10px 0;
     border:1px solid #ccc;
     border-radius:8px;
+    box-sizing:border-box;
 }
 
 button{
@@ -75,6 +77,11 @@ button:hover{
     background:#16a34a;
 }
 
+button:disabled{
+    background:#999;
+    cursor:not-allowed;
+}
+
 #message{
     text-align:center;
     margin-top:15px;
@@ -85,21 +92,15 @@ button:hover{
 
 </head>
 
-
 <body>
-
 
 <header>
 ReferPro Deposit
 </header>
 
-
-
 <div class="container">
 
-
 <h2>Deposit Payment</h2>
-
 
 <div class="payment">
 
@@ -109,12 +110,10 @@ ReferPro Deposit
 Rs. 500
 </div>
 
-
 <p>
 Payment Method:
 <b>Easypaisa</b>
 </p>
-
 
 <p>
 Account Number:
@@ -124,255 +123,249 @@ Account Number:
 
 </div>
 
-
-
 <h3>Submit Payment Details</h3>
-
 
 <label>Your Name</label>
 
-<input 
+<input
 type="text"
 id="name"
 placeholder="Enter name"
-required>
-
-
+required
+>
 
 <label>Easypaisa Sender Number</label>
 
-<input 
-type="number"
+<input
+type="tel"
 id="senderNumber"
 placeholder="03XXXXXXXXX"
-required>
-
-
+required
+>
 
 <label>Transaction ID / TRX ID</label>
 
-<input 
+<input
 type="text"
 id="trxId"
 placeholder="Enter transaction ID"
-required>
-
-
+required
+>
 
 <button id="submitDeposit">
 Submit Deposit Request
 </button>
 
-
 <div id="message"></div>
-
-
 
 </div>
 
-
-
 <script type="module">
 
-
 import { initializeApp }
-
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-
 import {
-
-getAuth,
-
-onAuthStateChanged
-
+    getAuth,
+    onAuthStateChanged
 }
-
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-
 import {
-
-getDatabase,
-
-ref,
-
-push,
-
-set
-
+    getDatabase,
+    ref,
+    push,
+    set
 }
-
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
 
 
 const firebaseConfig = {
 
+    apiKey:
+    "AIzaSyB2MHb9flfcWipUxDM6hF3Hgvy9ZsBHV0g",
 
-apiKey:
-"AIzaSyB2MHb9flfcWipUxDM6hF3Hgvy9ZsBHV0g",
+    authDomain:
+    "referpro-65d27.firebaseapp.com",
 
+    databaseURL:
+    "https://referpro-65d27-default-rtdb.firebaseio.com",
 
-authDomain:
-"referpro-65d27.firebaseapp.com",
+    projectId:
+    "referpro-65d27",
 
+    storageBucket:
+    "referpro-65d27.firebasestorage.app",
 
-databaseURL:
-"https://referpro-65d27-default-rtdb.firebaseio.com",
+    messagingSenderId:
+    "257409426857",
 
-
-projectId:
-"referpro-65d27",
-
-
-storageBucket:
-"referpro-65d27.firebasestorage.app",
-
-
-messagingSenderId:
-"257409426857",
-
-
-appId:
-"1:257409426857:web:8cfcdf79eab219d6f890b8"
+    appId:
+    "1:257409426857:web:8cfcdf79eab219d6f890b8"
 
 };
 
 
-
 const app = initializeApp(firebaseConfig);
 
-
 const auth = getAuth(app);
-
 
 const db = getDatabase(app);
 
 
-
 let currentUser = null;
 
+const button =
+document.getElementById("submitDeposit");
+
+const message =
+document.getElementById("message");
 
 
-onAuthStateChanged(auth,(user)=>{
+onAuthStateChanged(auth, (user) => {
 
+    if(!user){
 
-if(!user){
+        window.location.href = "login.html";
 
-window.location.href="login.html";
+        return;
 
-return;
+    }
 
-}
-
-
-currentUser = user;
-
-
-});
-
-
-
-
-document
-.getElementById("submitDeposit")
-.addEventListener("click", async()=>{
-
-
-if(!currentUser){
-
-alert("Please login first");
-
-return;
-
-}
-
-
-
-const name =
-document.getElementById("name").value.trim();
-
-
-
-const senderNumber =
-document.getElementById("senderNumber").value.trim();
-
-
-
-const trxId =
-document.getElementById("trxId").value.trim();
-
-
-
-if(!name || !senderNumber || !trxId){
-
-
-document.getElementById("message").style.color="red";
-
-document.getElementById("message").innerText =
-"Please fill all fields";
-
-
-return;
-
-}
-
-
-
-
-const depositRef =
-push(ref(db,"deposits"));
-
-
-
-await set(depositRef,{
-
-uid: currentUser.uid,
-
-name:name,
-
-email:currentUser.email,
-
-senderNumber:senderNumber,
-
-transactionId:trxId,
-
-amount:500,
-
-method:"Easypaisa",
-
-status:"pending",
-
-createdAt:Date.now()
-
+    currentUser = user;
 
 });
 
 
+button.addEventListener("click", async () => {
 
-document.getElementById("message").style.color="green";
-
-
-document.getElementById("message").innerText =
-"Deposit request submitted. Waiting for approval.";
+    message.innerText = "";
+    message.style.color = "red";
 
 
+    if(!currentUser){
 
-document.getElementById("name").value="";
+        message.innerText =
+        "Please login first.";
 
-document.getElementById("senderNumber").value="";
+        return;
 
-document.getElementById("trxId").value="";
+    }
 
 
+    const name =
+    document.getElementById("name")
+    .value
+    .trim();
+
+
+    const senderNumber =
+    document.getElementById("senderNumber")
+    .value
+    .trim();
+
+
+    const trxId =
+    document.getElementById("trxId")
+    .value
+    .trim();
+
+
+    if(!name || !senderNumber || !trxId){
+
+        message.innerText =
+        "Please fill all fields.";
+
+        return;
+
+    }
+
+
+    button.disabled = true;
+
+    button.innerText =
+    "Submitting...";
+
+
+    try{
+
+        const depositRef =
+        push(ref(db, "deposits"));
+
+
+        await set(depositRef, {
+
+            uid: currentUser.uid,
+
+            name: name,
+
+            email: currentUser.email || "",
+
+            senderNumber: senderNumber,
+
+            transactionId: trxId,
+
+            amount: 500,
+
+            method: "Easypaisa",
+
+            status: "pending",
+
+            createdAt: Date.now()
+
+        });
+
+
+        message.style.color = "green";
+
+        message.innerText =
+        "Deposit request submitted successfully!";
+
+
+        document.getElementById("name").value = "";
+
+        document.getElementById("senderNumber").value = "";
+
+        document.getElementById("trxId").value = "";
+
+
+    }
+
+    catch(error){
+
+        console.error("Deposit Error:", error);
+
+        message.style.color = "red";
+
+        if(error.code === "PERMISSION_DENIED"){
+
+            message.innerText =
+            "Firebase permission denied. Check Realtime Database Rules.";
+
+        }
+
+        else{
+
+            message.innerText =
+            "Deposit failed: " + error.message;
+
+        }
+
+    }
+
+    finally{
+
+        button.disabled = false;
+
+        button.innerText =
+        "Submit Deposit Request";
+
+    }
 
 });
-
-
 
 </script>
 
-
 </body>
 </html>
+```
